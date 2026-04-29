@@ -258,6 +258,14 @@
     background: var(--nyu-purple);
     color: white;
   }
+  #step-ind-3.done .step-circle {
+    border-color: #059669;
+    background: #059669;
+    color: white;
+  }
+  #step-ind-3.done .step-label {
+    color: #059669;
+  }
   .step-indicator-item.result .step-circle {
     border-color: var(--nyu-purple);
     background: var(--nyu-purple);
@@ -328,6 +336,13 @@
   }
 
   /* Live region for screen readers */
+  .sr-only {
+    position: absolute;
+    width: 1px; height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
   .sr-live {
     position: absolute;
     width: 1px; height: 1px;
@@ -412,7 +427,6 @@
     margin-top: 3px;
     transition: border-color 0.15s, background 0.15s;
     display: flex; align-items: center; justify-content: center;
-    aria-hidden: true;
   }
   .option:hover .option-icon,
   .option:focus-visible .option-icon {
@@ -627,7 +641,6 @@
     flex-shrink: 0;
     opacity: 0.5;
     margin-top: 0.05rem;
-    aria-hidden: true;
   }
   .cta-box {
     background: var(--nyu-purple);
@@ -910,8 +923,8 @@
 <header role="banner">
   <div class="nyu-wordmark" aria-label="NYU AI Center of Excellence">NYU <span aria-hidden="true">|</span> AI Center of Excellence</div>
   <div style="display:flex;align-items:center;gap:0.75rem">
-    <span style="font-size:0.65rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;background:rgba(255,255,255,0.2);color:white;padding:0.2rem 0.5rem;border-radius:4px;border:1px solid rgba(255,255,255,0.4)">Beta</span>
-    <a href="https://forms.gle/Lx2d2SURKoUtDAvu8" target="_blank" rel="noopener noreferrer" style="font-size:0.75rem;color:rgba(255,255,255,0.85);text-decoration:underline;text-underline-offset:2px;font-family:'NYUPerstare',sans-serif;">Give feedback</a>
+    <span role="note" aria-label="This tool is in beta" style="font-size:0.65rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;background:rgba(255,255,255,0.2);color:white;padding:0.2rem 0.5rem;border-radius:4px;border:1px solid rgba(255,255,255,0.4)">Beta</span>
+    <a href="https://forms.gle/Lx2d2SURKoUtDAvu8" target="_blank" rel="noopener noreferrer" style="font-size:0.75rem;color:rgba(255,255,255,0.85);text-decoration:underline;text-underline-offset:2px;font-family:'NYUPerstare',sans-serif;">Give feedback<span class="sr-only"> (opens in new tab)</span></a>
   </div>
 </header>
 
@@ -926,24 +939,24 @@
 
 <main id="main-content">
 
-  <nav class="step-indicator" aria-label="Framework steps">
-    <div class="step-indicator-item" id="step-ind-0" aria-current="step">
+  <nav class="step-indicator" aria-label="Framework steps" role="list">
+    <div class="step-indicator-item" id="step-ind-0" role="listitem" aria-current="step">
       <div class="step-circle" id="step-circle-0" aria-hidden="true">1</div>
       <div class="step-label">Ownership</div>
     </div>
-    <div class="step-indicator-item" id="step-ind-1">
+    <div class="step-indicator-item" id="step-ind-1" role="listitem">
       <div class="step-circle" id="step-circle-1" aria-hidden="true">2</div>
       <div class="step-label">Policy</div>
     </div>
-    <div class="step-indicator-item" id="step-ind-2">
+    <div class="step-indicator-item" id="step-ind-2" role="listitem">
       <div class="step-circle" id="step-circle-2" aria-hidden="true">3</div>
       <div class="step-label">Visibility</div>
     </div>
-    <div class="step-indicator-item" id="step-ind-gaps">
+    <div class="step-indicator-item" id="step-ind-gaps" role="listitem">
       <div class="step-circle" id="step-circle-gaps" aria-hidden="true">→</div>
       <div class="step-label">Close gaps</div>
     </div>
-    <div class="step-indicator-item" id="step-ind-3">
+    <div class="step-indicator-item" id="step-ind-3" role="listitem">
       <div class="step-circle" id="step-circle-3" aria-hidden="true">4</div>
       <div class="step-label">AI-ready</div>
     </div>
@@ -1532,8 +1545,8 @@ function render() {
       </ul>
       ${step.notSureHint ? `
       <div class="not-sure-wrap">
-        <button class="not-sure-btn" onclick="toggleHint(this)" aria-expanded="false" aria-controls="not-sure-hint">Not sure which to pick?</button>
-        <div class="not-sure-hint" id="not-sure-hint" role="note">${step.notSureHint}</div>
+        <button class="not-sure-btn" onclick="toggleHint(this)" aria-expanded="false" aria-controls="hint-${step.id}">Not sure which to pick?</button>
+        <div class="not-sure-hint" id="hint-${step.id}" role="note">${step.notSureHint}</div>
       </div>` : ''}
       ${currentStepIndex > 0 ? `<button class="back-btn" aria-label="Go back to the previous question" onclick="back()">Back</button>` : ''}
     </section>
@@ -1848,7 +1861,9 @@ function toggleAccordion(id, btn) {
 
 // ─── Share / copy ─────────────────────────────────────────────────────────────
 function toggleHint(btn) {
-  const hint = document.getElementById('not-sure-hint');
+  const hintId = btn.getAttribute('aria-controls');
+  const hint = document.getElementById(hintId);
+  if (!hint) return;
   const isVisible = hint.classList.contains('visible');
   hint.classList.toggle('visible', !isVisible);
   btn.setAttribute('aria-expanded', !isVisible);
