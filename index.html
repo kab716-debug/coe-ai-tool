@@ -1334,6 +1334,9 @@ function announce(msg) {
 const stepMap = { ownership: 0, policy: 1, visibility: 2, aifit: 3 };
 
 function setStepIndicator(activeIndex, finalAnswers) {
+  const answersToUse = finalAnswers || answers;
+  const earlierFlagged = [0,1,2].some(i => answersToUse[i] && answersToUse[i].status === 'flag');
+
   for (let i = 0; i < 4; i++) {
     const item = document.getElementById('step-ind-' + i);
     const circle = document.getElementById('step-circle-' + i);
@@ -1342,15 +1345,14 @@ function setStepIndicator(activeIndex, finalAnswers) {
     item.removeAttribute('aria-current');
     circle.innerHTML = i + 1;
 
-    if (finalAnswers) {
-      const ans = finalAnswers[i];
-      if (ans) {
-        if (ans.status === 'pass') { item.classList.add('done'); circle.innerHTML = '✓'; }
-        else { item.classList.add('stopped'); circle.innerHTML = '!'; }
-      }
-    } else {
-      if (i < activeIndex) { item.classList.add('done'); circle.innerHTML = '✓'; }
-      else if (i === activeIndex) { item.classList.add('active'); item.setAttribute('aria-current', 'step'); }
+    const ans = answersToUse[i];
+    if (ans) {
+      // AI-fit (step 4) can only be green if all earlier steps passed
+      const effectiveStatus = (i === 3 && earlierFlagged) ? 'flag' : ans.status;
+      if (effectiveStatus === 'pass') { item.classList.add('done'); circle.innerHTML = '✓'; }
+      else { item.classList.add('stopped'); circle.innerHTML = '!'; }
+    } else if (finalAnswers === null) {
+      if (i === activeIndex) { item.classList.add('active'); item.setAttribute('aria-current', 'step'); }
     }
   }
 }
@@ -1380,6 +1382,7 @@ function focusFirstInteractive() {
 // ─── Render question ──────────────────────────────────────────────────────────
 function render() {
   const step = currentStep();
+  if (!step) return;
   const tool = document.getElementById('tool');
   setStepIndicator(currentStepIndex, null);
   announce(step.announce);
@@ -1446,7 +1449,7 @@ function restart() {
   userHasInteracted = false;
   showRestartBtn(false);
   const url = window.location.pathname;
-  window.history.replaceState({}, '', url);
+  try { window.history.replaceState({}, '', url); } catch(e) {}
   render();
   window.scrollTo({ top: 0, behavior: 'instant' });
 }
@@ -1464,7 +1467,8 @@ function renderRoadmap() {
     { label: 'AI fit',    answerIndex: 3 },
   ];
 
-  const allPass = Object.values(answers).every(a => a.status === 'pass');
+  const earlierFlagged = [0,1,2].some(i => answers[i] && answers[i].status === 'flag');
+  const allPass = Object.values(answers).every(a => a.status === 'pass') && !earlierFlagged;
   const flags = Object.values(answers).filter(a => a.status === 'flag').length;
 
   const summaryText = allPass
@@ -1613,7 +1617,7 @@ function checkUrlResult() {
   const params = new URLSearchParams(window.location.search);
   const resultKey = params.get('result');
   if (resultKey && results[resultKey]) {
-    window.history.replaceState({}, '', window.location.pathname);
+    try { window.history.replaceState({}, '', window.location.pathname); } catch(e) {}
     showRestartBtn(true);
     // Show detail view directly
     setTimeout(() => showDetail(resultKey), 0);
