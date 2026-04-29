@@ -3,38 +3,61 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Is AI the right tool? — NYU</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<title>Is AI the right tool? — NYU Center of Excellence</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
     --nyu-purple: #57068C;
     --nyu-light: #F8F4FC;
-    --nyu-mid: #EDE0F7;
     --ink: #1A1A1A;
-    --muted: #6B6B6B;
-    --border: #E2D6EE;
+    --muted: #555555; /* lifted from 6B to pass 4.5:1 on white */
+    --border: #C8B8DC; /* darkened for 3:1 non-text contrast */
     --white: #FFFFFF;
-    --c1: #F59E0B;
-    --c1-bg: #FFFBEB;
-    --c2: #EF4444;
-    --c2-bg: #FFF5F5;
-    --c3: #10B981;
-    --c3-bg: #F0FDF8;
-    --c4: #57068C;
-    --c4-bg: #F8F4FC;
   }
 
   html { font-size: 16px; }
 
+  /* Skip link */
+  .skip-link {
+    position: absolute;
+    top: -100%;
+    left: 0;
+    background: var(--nyu-purple);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    font-size: 0.9rem;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+    z-index: 9999;
+    text-decoration: none;
+    border-radius: 0 0 6px 0;
+  }
+  .skip-link:focus { top: 0; }
+
   body {
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Montserrat', sans-serif;
     background: #FAFAFA;
     color: var(--ink);
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+  }
+
+  /* Respect reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  /* Focus styles — visible for keyboard users */
+  :focus-visible {
+    outline: 3px solid var(--nyu-purple);
+    outline-offset: 3px;
+    border-radius: 4px;
   }
 
   /* Header */
@@ -46,24 +69,26 @@
     gap: 1rem;
   }
   .nyu-wordmark {
-    font-family: 'DM Serif Display', serif;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
     color: white;
-    font-size: 1.25rem;
+    font-size: 1.2rem;
     letter-spacing: 0.02em;
   }
   .nyu-wordmark span {
-    opacity: 0.6;
+    opacity: 0.7;
     margin: 0 0.5rem;
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 300;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 400;
     font-size: 1rem;
   }
   .header-label {
-    color: rgba(255,255,255,0.7);
+    color: rgba(255,255,255,0.85);
     font-size: 0.8rem;
-    font-weight: 300;
+    font-weight: 400;
     letter-spacing: 0.08em;
     text-transform: uppercase;
+    margin-left: auto;
   }
 
   /* Hero */
@@ -82,18 +107,20 @@
     height: 48px;
     background: #FAFAFA;
     clip-path: ellipse(55% 100% at 50% 100%);
+    pointer-events: none;
   }
   .hero-eyebrow {
     font-size: 0.75rem;
     font-weight: 500;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: rgba(255,255,255,0.55);
+    color: rgba(255,255,255,0.75);
     margin-bottom: 1rem;
   }
   .hero h1 {
-    font-family: 'DM Serif Display', serif;
-    font-size: clamp(2rem, 5vw, 3.25rem);
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: clamp(1.8rem, 5vw, 3rem);
     color: white;
     line-height: 1.15;
     margin-bottom: 1rem;
@@ -102,33 +129,61 @@
     margin-right: auto;
   }
   .hero p {
-    color: rgba(255,255,255,0.7);
+    color: rgba(255,255,255,0.85);
     font-size: 1.05rem;
-    font-weight: 300;
+    font-weight: 400;
     max-width: 520px;
     margin: 0 auto 2rem;
     line-height: 1.65;
+  }
+  .hero-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-top: 0.25rem;
   }
   .hero-badge {
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
     background: rgba(255,255,255,0.12);
-    border: 1px solid rgba(255,255,255,0.2);
+    border: 1px solid rgba(255,255,255,0.3);
     border-radius: 2rem;
     padding: 0.45rem 0.9rem;
     font-size: 0.82rem;
-    color: rgba(255,255,255,0.8);
+    color: white;
     height: 34px;
     box-sizing: border-box;
   }
   .hero-badge::before {
     content: '';
     width: 6px; height: 6px;
-    background: #10B981;
+    background: #34D399;
     border-radius: 50%;
     display: inline-block;
+    flex-shrink: 0;
   }
+  .all-types-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 2rem;
+    padding: 0.45rem 1rem;
+    font-size: 0.82rem;
+    color: white;
+    cursor: pointer;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 400;
+    height: 34px;
+    box-sizing: border-box;
+    transition: background 0.15s;
+  }
+  .all-types-btn:hover { background: rgba(255,255,255,0.22); }
+  .all-types-btn::before { content: '↗'; font-size: 0.75rem; aria-hidden: true; }
 
   /* Main */
   main {
@@ -148,7 +203,7 @@
   }
   .progress-track {
     flex: 1;
-    height: 3px;
+    height: 4px;
     background: var(--border);
     border-radius: 2px;
     overflow: hidden;
@@ -166,21 +221,29 @@
     font-weight: 500;
   }
 
+  /* Live region for screen readers */
+  .sr-live {
+    position: absolute;
+    width: 1px; height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
   /* Card */
   .card {
     background: white;
     border: 1px solid var(--border);
     border-radius: 16px;
     padding: 2.25rem 2.5rem;
-    animation: fadeUp 0.35s ease both;
+    animation: fadeUp 0.3s ease both;
   }
   @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(12px); }
+    from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
   }
-
   .card-eyebrow {
-    font-size: 0.7rem;
+    font-size: 0.72rem;
     font-weight: 500;
     letter-spacing: 0.1em;
     text-transform: uppercase;
@@ -188,8 +251,9 @@
     margin-bottom: 0.6rem;
   }
   .card h2 {
-    font-family: 'DM Serif Display', serif;
-    font-size: 1.55rem;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 1.45rem;
     color: var(--ink);
     line-height: 1.3;
     margin-bottom: 0.65rem;
@@ -199,44 +263,58 @@
     color: var(--muted);
     line-height: 1.65;
     margin-bottom: 2rem;
-    font-weight: 300;
+    font-weight: 400;
   }
 
   /* Options */
-  .options { display: flex; flex-direction: column; gap: 0.65rem; }
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    list-style: none;
+  }
   .option {
     display: flex;
     align-items: flex-start;
     gap: 0.9rem;
     padding: 1rem 1.2rem;
-    border: 1.5px solid var(--border);
+    border: 2px solid var(--border);
     border-radius: 10px;
     cursor: pointer;
     background: white;
     text-align: left;
     transition: border-color 0.15s, background 0.15s, transform 0.1s;
     width: 100%;
+    font-family: 'Montserrat', sans-serif;
   }
   .option:hover {
     border-color: var(--nyu-purple);
     background: var(--nyu-light);
     transform: translateX(2px);
   }
+  .option:focus-visible {
+    outline: 3px solid var(--nyu-purple);
+    outline-offset: 2px;
+    border-color: var(--nyu-purple);
+  }
   .option:active { transform: translateX(1px) scale(0.99); }
   .option-icon {
     width: 20px; height: 20px;
-    border: 1.5px solid var(--border);
+    border: 2px solid var(--border);
     border-radius: 50%;
     flex-shrink: 0;
-    margin-top: 2px;
+    margin-top: 3px;
     transition: border-color 0.15s, background 0.15s;
     display: flex; align-items: center; justify-content: center;
+    aria-hidden: true;
   }
-  .option:hover .option-icon {
+  .option:hover .option-icon,
+  .option:focus-visible .option-icon {
     border-color: var(--nyu-purple);
     background: var(--nyu-purple);
   }
-  .option:hover .option-icon::after {
+  .option:hover .option-icon::after,
+  .option:focus-visible .option-icon::after {
     content: '';
     width: 6px; height: 6px;
     background: white;
@@ -252,40 +330,42 @@
   .option-text span {
     font-size: 0.85rem;
     color: var(--muted);
-    font-weight: 300;
+    font-weight: 400;
     line-height: 1.5;
   }
 
-  /* Back */
+  /* Back btn */
   .back-btn {
     background: none;
     border: none;
     color: var(--muted);
-    font-size: 0.85rem;
+    font-size: 0.875rem;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
-    gap: 0.3rem;
+    gap: 0.4rem;
     margin-top: 1.25rem;
-    padding: 0.25rem 0;
-    font-family: 'DM Sans', sans-serif;
+    padding: 0.35rem 0.5rem;
+    font-family: 'Montserrat', sans-serif;
+    border-radius: 4px;
     transition: color 0.15s;
+    text-decoration: underline;
+    text-underline-offset: 3px;
   }
   .back-btn:hover { color: var(--ink); }
-  .back-btn::before { content: '←'; }
 
   /* Result card */
   .result-card {
     border-radius: 16px;
     padding: 2.25rem 2.5rem;
-    animation: fadeUp 0.35s ease both;
+    animation: fadeUp 0.3s ease both;
+    border: 2px solid;
   }
   .result-type-badge {
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
     font-size: 0.72rem;
-    font-weight: 500;
+    font-weight: 600;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     padding: 0.35rem 0.8rem;
@@ -293,26 +373,32 @@
     margin-bottom: 1.25rem;
   }
   .result-card h2 {
-    font-family: 'DM Serif Display', serif;
-    font-size: 1.8rem;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 1.65rem;
     line-height: 1.25;
     margin-bottom: 0.75rem;
   }
   .result-body {
     font-size: 1rem;
     line-height: 1.7;
-    font-weight: 300;
+    font-weight: 400;
     margin-bottom: 1.75rem;
   }
   .result-section-label {
-    font-size: 0.7rem;
-    font-weight: 500;
+    font-size: 0.72rem;
+    font-weight: 600;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     margin-bottom: 0.6rem;
-    opacity: 0.6;
   }
-  .result-items { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.75rem; }
+  .result-items {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1.75rem;
+    list-style: none;
+  }
   .result-item {
     display: flex;
     gap: 0.65rem;
@@ -323,10 +409,10 @@
   .result-item::before {
     content: '—';
     flex-shrink: 0;
-    opacity: 0.4;
+    opacity: 0.5;
     margin-top: 0.05rem;
+    aria-hidden: true;
   }
-
   .cta-box {
     background: var(--nyu-purple);
     border-radius: 10px;
@@ -339,19 +425,19 @@
     margin-top: 1.5rem;
   }
   .cta-box p {
-    color: rgba(255,255,255,0.85);
+    color: rgba(255,255,255,0.9);
     font-size: 0.9rem;
-    font-weight: 300;
+    font-weight: 400;
     line-height: 1.5;
   }
-  .cta-box strong { color: white; display: block; font-size: 0.95rem; margin-bottom: 0.2rem; }
+  .cta-box strong { color: white; display: block; font-size: 0.95rem; margin-bottom: 0.2rem; font-weight: 500; }
   .cta-btn {
     background: white;
     color: var(--nyu-purple);
     border: none;
     padding: 0.6rem 1.25rem;
     border-radius: 6px;
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Montserrat', sans-serif;
     font-size: 0.875rem;
     font-weight: 500;
     cursor: pointer;
@@ -360,7 +446,8 @@
     transition: opacity 0.15s;
     display: inline-block;
   }
-  .cta-btn:hover { opacity: 0.9; }
+  .cta-btn:hover { opacity: 0.88; }
+  .cta-btn:focus-visible { outline: 3px solid white; outline-offset: 2px; }
 
   .restart-btn {
     display: inline-flex;
@@ -368,81 +455,52 @@
     gap: 0.35rem;
     margin-top: 1.25rem;
     background: none;
-    border: 1.5px solid var(--border);
+    border: 2px solid var(--border);
     border-radius: 6px;
     padding: 0.5rem 1rem;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.85rem;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.875rem;
     color: var(--muted);
     cursor: pointer;
     transition: color 0.15s, border-color 0.15s;
   }
-  .restart-btn:hover { color: var(--ink); border-color: #ccc; }
+  .restart-btn:hover { color: var(--ink); border-color: #999; }
 
-  /* Type colors */
-  .t1 { background: var(--c1-bg); border: 1.5px solid #FCD34D; }
-  .t1 h2, .t1 .result-section-label { color: #92400E; }
-  .t1 .result-type-badge { background: #FEF3C7; color: #92400E; }
-  .t1 .result-body, .t1 .result-item { color: #78350F; }
+  /* Type colors — all tested for 4.5:1 contrast */
+  .t1 { background: #FFFBEB; border-color: #D97706; }
+  .t1 h2 { color: #78350F; }
+  .t1 .result-type-badge { background: #FEF3C7; color: #78350F; }
+  .t1 .result-body { color: #451A03; }
+  .t1 .result-item { color: #451A03; }
+  .t1 .result-section-label { color: #78350F; }
 
-  .t2 { background: var(--c2-bg); border: 1.5px solid #FCA5A5; }
-  .t2 h2, .t2 .result-section-label { color: #991B1B; }
-  .t2 .result-type-badge { background: #FEE2E2; color: #991B1B; }
-  .t2 .result-body, .t2 .result-item { color: #7F1D1D; }
+  .t2 { background: #FFF5F5; border-color: #DC2626; }
+  .t2 h2 { color: #7F1D1D; }
+  .t2 .result-type-badge { background: #FEE2E2; color: #7F1D1D; }
+  .t2 .result-body { color: #450A0A; }
+  .t2 .result-item { color: #450A0A; }
+  .t2 .result-section-label { color: #7F1D1D; }
 
-  .t3 { background: var(--c3-bg); border: 1.5px solid #6EE7B7; }
-  .t3 h2, .t3 .result-section-label { color: #065F46; }
-  .t3 .result-type-badge { background: #D1FAE5; color: #065F46; }
-  .t3 .result-body, .t3 .result-item { color: #064E3B; }
+  .t3 { background: #F0FDF8; border-color: #059669; }
+  .t3 h2 { color: #064E3B; }
+  .t3 .result-type-badge { background: #D1FAE5; color: #064E3B; }
+  .t3 .result-body { color: #022C22; }
+  .t3 .result-item { color: #022C22; }
+  .t3 .result-section-label { color: #064E3B; }
 
-  .t4 { background: var(--c4-bg); border: 1.5px solid #C4B5FD; }
-  .t4 h2, .t4 .result-section-label { color: #3B0764; }
+  .t4 { background: #F8F4FC; border-color: #7C3AED; }
+  .t4 h2 { color: #3B0764; }
   .t4 .result-type-badge { background: #EDE9FE; color: #3B0764; }
-  .t4 .result-body, .t4 .result-item { color: #2E1065; }
-
-  /* Footer */
-  footer {
-    background: white;
-    border-top: 1px solid var(--border);
-    padding: 1.5rem 2rem;
-    text-align: center;
-    font-size: 0.8rem;
-    color: var(--muted);
-  }
-  footer a { color: var(--nyu-purple); text-decoration: none; }
-
-  .hero-badge, .all-types-btn {
-    height: 34px;
-    display: inline-flex;
-    align-items: center;
-    vertical-align: middle;
-  }
-  .all-types-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    background: rgba(255,255,255,0.12);
-    border: 1px solid rgba(255,255,255,0.25);
-    border-radius: 2rem;
-    padding: 0.45rem 1rem;
-    font-size: 0.82rem;
-    color: rgba(255,255,255,0.8);
-    cursor: pointer;
-    font-family: 'DM Sans', sans-serif;
-    height: 34px;
-    box-sizing: border-box;
-    transition: background 0.15s, color 0.15s;
-  }
-  .all-types-btn:hover { background: rgba(255,255,255,0.2); color: white; }
-  .all-types-btn::before { content: '↗'; font-size: 0.75rem; }
+  .t4 .result-body { color: #1E0442; }
+  .t4 .result-item { color: #1E0442; }
+  .t4 .result-section-label { color: #3B0764; }
 
   /* Modal */
   .modal-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(10, 0, 20, 0.6);
-    backdrop-filter: blur(4px);
-    z-index: 100;
+    background: rgba(10, 0, 20, 0.65);
+    z-index: 200;
     display: flex;
     align-items: flex-start;
     justify-content: center;
@@ -450,18 +508,18 @@
     overflow-y: auto;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.25s;
+    transition: opacity 0.2s;
   }
   .modal-overlay.open { opacity: 1; pointer-events: all; }
   .modal {
     background: white;
     border-radius: 20px;
     width: 100%;
-    max-width: 700px;
+    max-width: 680px;
     padding: 2.5rem;
     position: relative;
-    transform: translateY(16px);
-    transition: transform 0.25s;
+    transform: translateY(12px);
+    transition: transform 0.2s;
     margin: auto;
   }
   .modal-overlay.open .modal { transform: translateY(0); }
@@ -469,27 +527,31 @@
     position: absolute;
     top: 1.25rem; right: 1.25rem;
     background: #F3F4F6;
-    border: none;
-    width: 32px; height: 32px;
+    border: 2px solid transparent;
+    width: 36px; height: 36px;
     border-radius: 50%;
     cursor: pointer;
     font-size: 1rem;
-    color: var(--muted);
+    color: var(--ink);
     display: flex; align-items: center; justify-content: center;
+    font-family: 'Montserrat', sans-serif;
     transition: background 0.15s;
+    line-height: 1;
   }
   .modal-close:hover { background: #E5E7EB; }
-  .modal h3 {
-    font-family: 'DM Serif Display', serif;
-    font-size: 1.5rem;
+  .modal-close:focus-visible { outline: 3px solid var(--nyu-purple); outline-offset: 2px; }
+  .modal h2 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 1.4rem;
     color: var(--ink);
     margin-bottom: 0.4rem;
   }
   .modal-intro {
     font-size: 0.9rem;
     color: var(--muted);
-    font-weight: 300;
-    line-height: 1.6;
+    font-weight: 400;
+    line-height: 1.65;
     margin-bottom: 2rem;
   }
   .type-row {
@@ -509,37 +571,33 @@
     width: 44px; height: 44px;
     border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
-    font-family: 'DM Serif Display', serif;
-    font-size: 1.1rem;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.15rem;
     flex-shrink: 0;
+    font-weight: 700;
   }
   .type-connector {
     width: 2px;
     flex: 1;
-    min-height: 1rem;
+    min-height: 0.75rem;
     margin: 4px auto 0;
     border-radius: 1px;
   }
   .type-row-content {
     flex: 1;
-    padding: 0.75rem 1rem 0.85rem;
+    padding: 0.85rem 1rem;
     border-radius: 10px;
-    border: 1.5px solid;
-    margin-bottom: 0;
+    border: 2px solid;
   }
-  .type-row-content h4 {
+  .type-row-content h3 {
     font-size: 0.95rem;
     font-weight: 500;
     margin-bottom: 0.3rem;
   }
-  .type-row-content p {
-    font-size: 0.85rem;
-    font-weight: 300;
-    line-height: 1.55;
-  }
-  .type-row-content .type-tag {
+  .type-row-content p { font-size: 0.875rem; font-weight: 400; line-height: 1.55; }
+  .type-tag {
     font-size: 0.68rem;
-    font-weight: 500;
+    font-weight: 600;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     display: inline-block;
@@ -547,36 +605,35 @@
     border-radius: 2rem;
     margin-bottom: 0.4rem;
   }
-  /* connector colors */
-  .conn-1 { background: #FCD34D; }
-  .conn-2 { background: #FCA5A5; }
-  .conn-3 { background: #6EE7B7; }
 
-  /* num circles */
-  .nc-1 { background: #FEF3C7; color: #92400E; }
-  .nc-2 { background: #FEE2E2; color: #991B1B; }
-  .nc-3 { background: #D1FAE5; color: #065F46; }
+  /* connector colors */
+  .conn-1 { background: #D97706; }
+  .conn-2 { background: #DC2626; }
+  .conn-3 { background: #059669; }
+
+  .nc-1 { background: #FEF3C7; color: #78350F; }
+  .nc-2 { background: #FEE2E2; color: #7F1D1D; }
+  .nc-3 { background: #D1FAE5; color: #064E3B; }
   .nc-4 { background: #EDE9FE; color: #3B0764; }
 
-  /* row content */
-  .rc-1 { background: #FFFBEB; border-color: #FCD34D; }
-  .rc-1 h4 { color: #92400E; }
-  .rc-1 p { color: #78350F; }
-  .rc-1 .type-tag { background: #FEF3C7; color: #92400E; }
+  .rc-1 { background: #FFFBEB; border-color: #D97706; }
+  .rc-1 h3 { color: #78350F; }
+  .rc-1 p { color: #451A03; }
+  .rc-1 .type-tag { background: #FEF3C7; color: #78350F; }
 
-  .rc-2 { background: #FFF5F5; border-color: #FCA5A5; }
-  .rc-2 h4 { color: #991B1B; }
-  .rc-2 p { color: #7F1D1D; }
-  .rc-2 .type-tag { background: #FEE2E2; color: #991B1B; }
+  .rc-2 { background: #FFF5F5; border-color: #DC2626; }
+  .rc-2 h3 { color: #7F1D1D; }
+  .rc-2 p { color: #450A0A; }
+  .rc-2 .type-tag { background: #FEE2E2; color: #7F1D1D; }
 
-  .rc-3 { background: #F0FDF8; border-color: #6EE7B7; }
-  .rc-3 h4 { color: #065F46; }
-  .rc-3 p { color: #064E3B; }
-  .rc-3 .type-tag { background: #D1FAE5; color: #065F46; }
+  .rc-3 { background: #F0FDF8; border-color: #059669; }
+  .rc-3 h3 { color: #064E3B; }
+  .rc-3 p { color: #022C22; }
+  .rc-3 .type-tag { background: #D1FAE5; color: #064E3B; }
 
-  .rc-4 { background: #F8F4FC; border-color: #C4B5FD; }
-  .rc-4 h4 { color: #3B0764; }
-  .rc-4 p { color: #2E1065; }
+  .rc-4 { background: #F8F4FC; border-color: #7C3AED; }
+  .rc-4 h3 { color: #3B0764; }
+  .rc-4 p { color: #1E0442; }
   .rc-4 .type-tag { background: #EDE9FE; color: #3B0764; }
 
   .modal-footer-note {
@@ -585,7 +642,7 @@
     border-top: 1px solid var(--border);
     font-size: 0.82rem;
     color: var(--muted);
-    font-weight: 300;
+    font-weight: 400;
     line-height: 1.6;
     font-style: italic;
   }
@@ -598,13 +655,25 @@
     border: none;
     border-radius: 10px;
     padding: 0.9rem;
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Montserrat', sans-serif;
     font-size: 0.95rem;
     font-weight: 500;
     cursor: pointer;
     transition: opacity 0.15s;
   }
   .start-tool-btn:hover { opacity: 0.88; }
+  .start-tool-btn:focus-visible { outline: 3px solid var(--nyu-purple); outline-offset: 3px; }
+
+  footer {
+    background: white;
+    border-top: 1px solid var(--border);
+    padding: 1.5rem 2rem;
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+  footer a { color: var(--nyu-purple); text-decoration: underline; text-underline-offset: 2px; }
+  footer a:hover { opacity: 0.8; }
 
   @media (max-width: 600px) {
     .card, .result-card { padding: 1.5rem; }
@@ -616,120 +685,314 @@
 </head>
 <body>
 
-<header>
-  <div>
-    <div class="nyu-wordmark">NYU <span>|</span> AI Decision Tool</div>
-  </div>
-  <div style="margin-left:auto">
-    <div class="header-label">Center of Excellence</div>
-  </div>
+<!-- Skip navigation for keyboard/screen reader users -->
+<a href="#main-content" class="skip-link">Skip to main content</a>
+
+<!-- Screen reader live region — announces step changes -->
+<div id="sr-announce" class="sr-live" aria-live="polite" aria-atomic="true"></div>
+
+<header role="banner">
+  <div class="nyu-wordmark" aria-label="NYU AI Center of Excellence">NYU <span aria-hidden="true">|</span> AI Center of Excellence</div>
 </header>
 
-<div class="hero">
-  <div class="hero-eyebrow">Right Tool First Framework</div>
-  <h1>Is AI the right tool for your problem?</h1>
-  <p>Answer a few short questions to find out what kind of problem you have — and what to do next.</p>
-  <div style="display:flex;align-items:center;justify-content:center;gap:0.75rem;flex-wrap:wrap;margin-top:1.5rem">
-    <div class="hero-badge">Takes about 2 minutes</div>
-    <button class="all-types-btn" onclick="openModal()">See how the framework works</button>
+<div class="hero" role="region" aria-label="Tool introduction">
+  <div class="hero-eyebrow" aria-hidden="true">Right Tool First Framework</div>
+  <h1>Is AI the right tool for your challenge?</h1>
+  <p>Answer a few short questions to find out if AI is the right solution for you.</p>
+  <div class="hero-actions">
+    <div class="hero-badge" role="note" aria-label="Estimated time: takes about 2 minutes">Takes about 2 minutes</div>
+    <button class="all-types-btn" onclick="openModal()" aria-haspopup="dialog" aria-label="See how the framework works — opens a dialog">See how the framework works</button>
   </div>
 </div>
 
-<!-- Modal -->
-<div class="modal-overlay" id="modal-overlay" onclick="handleOverlayClick(event)">
-  <div class="modal" id="modal">
-    <button class="modal-close" onclick="closeModal()">✕</button>
-    <h3>The path to AI-ready</h3>
-    <p class="modal-intro">Most problems that arrive as AI requests are actually an earlier type in disguise. Work through each type in order — resolving an earlier type often eliminates the need to go further.</p>
-
-    <div class="type-row">
-      <div class="type-row-num">
-        <div class="type-num-circle nc-1">1</div>
-        <div class="type-connector conn-1"></div>
-      </div>
-      <div class="type-row-content rc-1">
-        <div class="type-tag">Resolve first</div>
-        <h4>Ownership problem</h4>
-        <p>No one is clearly accountable. Tools don't fill ownership gaps — they make them more complicated. Name one owner before anything else.</p>
-      </div>
-    </div>
-
-    <div class="type-row">
-      <div class="type-row-num">
-        <div class="type-num-circle nc-2">2</div>
-        <div class="type-connector conn-2"></div>
-      </div>
-      <div class="type-row-content rc-2">
-        <div class="type-tag">Then check</div>
-        <h4>Policy problem</h4>
-        <p>The rules are unclear or missing. Automating ambiguity doesn't resolve it — it just makes it faster. Write the policy before building anything.</p>
-      </div>
-    </div>
-
-    <div class="type-row">
-      <div class="type-row-num">
-        <div class="type-num-circle nc-3">3</div>
-        <div class="type-connector conn-3"></div>
-      </div>
-      <div class="type-row-content rc-3">
-        <div class="type-tag">Then check</div>
-        <h4>Visibility problem</h4>
-        <p>The data exists but no one can see it. Requests come in via email, reports are built by hand, there's no unified view. A Qualtrics form and Tableau dashboard often solve what AI was being asked to solve.</p>
-      </div>
-    </div>
-
-    <div class="type-row" style="margin-bottom:0">
-      <div class="type-row-num">
-        <div class="type-num-circle nc-4">4</div>
-      </div>
-      <div class="type-row-content rc-4">
-        <div class="type-tag">AI-ready ✓</div>
-        <h4>AI-ready problem</h4>
-        <p>Types 1–3 are resolved. The remaining gap involves synthesis, pattern recognition, or generation at scale — the work AI genuinely does well. Now the AI conversation can happen on solid ground.</p>
-      </div>
-    </div>
-
-    <p class="modal-footer-note">Most problems that arrive as Type 4 requests are actually Type 1, 2, or 3. That's not a failure — it's useful information, and it's a solvable thing.</p>
-    <button class="start-tool-btn" onclick="closeModal()">Start the tool →</button>
-  </div>
-</div>
-
-<main>
+<main id="main-content">
   <div class="progress-wrap">
-    <div class="progress-track">
+    <div
+      class="progress-track"
+      role="progressbar"
+      aria-valuemin="0"
+      aria-valuemax="100"
+      aria-valuenow="0"
+      aria-label="Tool progress"
+      id="progress-bar"
+    >
       <div class="progress-fill" id="progress-fill" style="width:0%"></div>
     </div>
-    <div class="progress-label" id="progress-label">Start</div>
+    <div class="progress-label" id="progress-label" aria-live="polite">Start</div>
   </div>
 
   <div id="tool"></div>
 </main>
 
-<footer>
-  <p>A tool from the <a href="#">NYU Center of Excellence for AI Strategy</a> &nbsp;·&nbsp; <a href="#">About Right Tool First</a></p>
+<!-- Modal -->
+<div
+  class="modal-overlay"
+  id="modal-overlay"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="modal-title"
+  onclick="handleOverlayClick(event)"
+>
+  <div class="modal" id="modal">
+    <button class="modal-close" onclick="closeModal()" aria-label="Close dialog">✕</button>
+    <h2 id="modal-title">The path to AI-ready</h2>
+    <p class="modal-intro">Most problems that arrive as AI requests are actually an earlier type in disguise. Work through each type in order — resolving an earlier type often eliminates the need to go further.</p>
+
+    <ol style="list-style:none" aria-label="The four problem types">
+      <li>
+        <div class="type-row">
+          <div class="type-row-num" aria-hidden="true">
+            <div class="type-num-circle nc-1">1</div>
+            <div class="type-connector conn-1"></div>
+          </div>
+          <div class="type-row-content rc-1">
+            <div class="type-tag">Resolve first</div>
+            <h3>Ownership problem</h3>
+            <p>No one is clearly accountable. Tools don't fill ownership gaps — they make them more complicated. Name one owner before anything else.</p>
+          </div>
+        </div>
+      </li>
+      <li>
+        <div class="type-row">
+          <div class="type-row-num" aria-hidden="true">
+            <div class="type-num-circle nc-2">2</div>
+            <div class="type-connector conn-2"></div>
+          </div>
+          <div class="type-row-content rc-2">
+            <div class="type-tag">Then check</div>
+            <h3>Policy problem</h3>
+            <p>The rules are unclear or missing. Automating ambiguity doesn't resolve it — it just makes it faster. Write the policy before building anything.</p>
+          </div>
+        </div>
+      </li>
+      <li>
+        <div class="type-row">
+          <div class="type-row-num" aria-hidden="true">
+            <div class="type-num-circle nc-3">3</div>
+            <div class="type-connector conn-3"></div>
+          </div>
+          <div class="type-row-content rc-3">
+            <div class="type-tag">Then check</div>
+            <h3>Visibility problem</h3>
+            <p>The data exists but no one can see it. Requests come in via email, reports are built by hand, there's no unified view. A Qualtrics form and Tableau dashboard often solve what AI was being asked to solve.</p>
+          </div>
+        </div>
+      </li>
+      <li>
+        <div class="type-row" style="margin-bottom:0">
+          <div class="type-row-num" aria-hidden="true">
+            <div class="type-num-circle nc-4">4</div>
+          </div>
+          <div class="type-row-content rc-4">
+            <div class="type-tag">AI-ready ✓</div>
+            <h3>AI-ready problem</h3>
+            <p>Types 1–3 are resolved. The remaining gap involves synthesis, pattern recognition, or generation at scale — the work AI genuinely does well. Now the AI conversation can happen on solid ground.</p>
+          </div>
+        </div>
+      </li>
+    </ol>
+
+    <p class="modal-footer-note">Most problems that arrive as Type 4 requests are actually Type 1, 2, or 3. That's not a failure — it's useful information, and it's a solvable thing.</p>
+    <button class="start-tool-btn" onclick="closeModal()">Start the tool <span aria-hidden="true">→</span></button>
+  </div>
+</div>
+
+<!-- About Modal -->
+<style>
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+  @media (max-width: 540px) {
+    .about-grid { grid-template-columns: 1fr; }
+  }
+  .about-pillar {
+    border-radius: 10px;
+    padding: 1rem;
+    border: 1.5px solid;
+  }
+  .about-pillar-num {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.4rem;
+  }
+  .about-pillar-title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+    line-height: 1.3;
+  }
+  .about-pillar-body {
+    font-size: 0.8rem;
+    font-weight: 400;
+    line-height: 1.55;
+  }
+</style>
+
+<div
+  class="modal-overlay"
+  id="about-overlay"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="about-title"
+  onclick="handleAboutOverlayClick(event)"
+>
+  <div class="modal" id="about-modal" style="max-width:720px">
+    <button class="modal-close" onclick="closeAbout()" aria-label="Close about dialog">✕</button>
+    <h2 id="about-title" style="margin-bottom:0.4rem">Right Tool First</h2>
+    <p style="font-size:0.95rem;color:var(--muted);font-weight:400;margin-bottom:1.5rem;line-height:1.65">Why this framework exists, and what it makes possible at NYU</p>
+
+    <p style="font-size:0.95rem;line-height:1.75;color:var(--ink);font-weight:400;margin-bottom:1.5rem">NYU's schools and administrative units are doing real, meaningful work with AI. This framework exists to make more of that work succeed — by helping departments get to the right solution faster, whether that solution is AI or something else. The question it answers is not <em>"should we use AI?"</em> It's <em>"what kind of challenge do we actually have?"</em> Getting that right first is what makes the difference between an AI project that works and one that doesn't.</p>
+
+    <ul class="about-grid" role="list" aria-label="Six reasons this framework matters" style="list-style:none;padding:0">
+
+      <li class="about-pillar" style="background:#FFFBEB;border-color:#D97706">
+        <div class="about-pillar-num" style="color:#78350F" aria-hidden="true">01</div>
+        <h3 class="about-pillar-title" style="color:#78350F">It meets schools where they are</h3>
+        <p class="about-pillar-body" style="color:#78350F">NYU's schools and administrative units are not at the same starting point — and that's fine. Right Tool First gives every unit a useful entry point, wherever they're starting from.</p>
+      </li>
+
+      <li class="about-pillar" style="background:#FFF5F5;border-color:#DC2626">
+        <div class="about-pillar-num" style="color:#7F1D1D" aria-hidden="true">02</div>
+        <h3 class="about-pillar-title" style="color:#7F1D1D">It gives innovators a clear path</h3>
+        <p class="about-pillar-body" style="color:#7F1D1D">Across NYU, people are already experimenting — not because their job descriptions asked them to, but because they saw a challenge. This framework channels that energy productively.</p>
+      </li>
+
+      <li class="about-pillar" style="background:#F0FDF8;border-color:#059669">
+        <div class="about-pillar-num" style="color:#064E3B" aria-hidden="true">03</div>
+        <h3 class="about-pillar-title" style="color:#064E3B">It builds the foundation AI needs</h3>
+        <p class="about-pillar-body" style="color:#064E3B">Most AI projects that struggle do so because of unclear ownership, missing policy, or inaccessible data — nothing to do with AI itself. Working through those first is what makes the AI work when you get there.</p>
+      </li>
+
+      <li class="about-pillar" style="background:#FFFBEB;border-color:#D97706">
+        <div class="about-pillar-num" style="color:#78350F" aria-hidden="true">04</div>
+        <h3 class="about-pillar-title" style="color:#78350F">It protects against cost and risk</h3>
+        <p class="about-pillar-body" style="color:#78350F">A project that launches before it's ready doesn't just waste money — it makes the next conversation harder. Right Tool First helps ensure that when a school or unit commits to AI, it's a commitment worth making.</p>
+      </li>
+
+      <li class="about-pillar" style="background:#F8F4FC;border-color:#7C3AED">
+        <div class="about-pillar-num" style="color:#3B0764" aria-hidden="true">05</div>
+        <h3 class="about-pillar-title" style="color:#3B0764">It creates equity across schools</h3>
+        <p class="about-pillar-body" style="color:#3B0764">Without a framework, schools and units with natural AI champions race ahead while others are quietly left behind. This ensures the conditions for success reach every school and administrative unit.</p>
+      </li>
+
+      <li class="about-pillar" style="background:#F0FDF8;border-color:#059669">
+        <div class="about-pillar-num" style="color:#064E3B" aria-hidden="true">06</div>
+        <h3 class="about-pillar-title" style="color:#064E3B">It makes readiness a success</h3>
+        <p class="about-pillar-body" style="color:#064E3B">A school or unit that resolves an ownership gap, clarifies a policy, or builds a dashboard it didn't have before hasn't failed to adopt AI. It's built the foundation that makes AI adoption durable when the time comes.</p>
+      </li>
+
+    </ul>
+
+    <div style="border-top:1px solid var(--border);padding-top:1.25rem" role="note" aria-label="The four challenge types summary">
+      <p style="font-size:0.8rem;color:var(--muted);font-weight:400;line-height:1.65">
+        <strong style="color:var(--ink);font-weight:500">The four challenge types:</strong>
+        &nbsp;Type 1 — Ownership problem.&nbsp; Type 2 — Policy problem.&nbsp; Type 3 — Visibility problem.&nbsp; Type 4 — AI-ready.&nbsp;
+        <em>Most challenges that arrive as Type 4 requests are actually Type 1, 2, or 3 — and that's a solvable thing.</em>
+      </p>
+    </div>
+
+    <button class="start-tool-btn" onclick="closeAbout()" style="margin-top:1.25rem" aria-label="Close this dialog and return to the tool">Close</button>
+  </div>
+</div>
+
+<footer role="contentinfo">
+  <p>A tool from the NYU AI Center of Excellence &nbsp;·&nbsp; <button onclick="openAbout()" style="background:none;border:none;font-family:'Montserrat',sans-serif;font-size:0.8rem;color:var(--nyu-purple);cursor:pointer;text-decoration:underline;text-underline-offset:2px;padding:0;">About Right Tool First</button></p>
 </footer>
 
 <script>
-function openModal() {
-  document.getElementById('modal-overlay').classList.add('open');
+// ─── About modal ─────────────────────────────────────────────────────────────
+let aboutTrigger = null;
+
+function openAbout() {
+  aboutTrigger = document.activeElement;
+  const overlay = document.getElementById('about-overlay');
+  overlay.classList.add('open');
   document.body.style.overflow = 'hidden';
+  setTimeout(() => { overlay.querySelector('.modal-close').focus(); }, 50);
 }
+
+function closeAbout() {
+  document.getElementById('about-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+  if (aboutTrigger) aboutTrigger.focus();
+}
+
+function handleAboutOverlayClick(e) {
+  if (e.target === document.getElementById('about-overlay')) closeAbout();
+}
+
+// Focus trap for about modal
+document.addEventListener('keydown', function(e) {
+  const aboutOverlay = document.getElementById('about-overlay');
+  if (!aboutOverlay.classList.contains('open')) return;
+  if (e.key === 'Escape') { closeAbout(); return; }
+  if (e.key === 'Tab') {
+    const focusable = aboutOverlay.querySelectorAll('button, [href], [tabindex]:not([tabindex="-1"])');
+    const first = focusable[0], last = focusable[focusable.length - 1];
+    if (e.shiftKey) { if (document.activeElement === first) { e.preventDefault(); last.focus(); } }
+    else { if (document.activeElement === last) { e.preventDefault(); first.focus(); } }
+  }
+});
+
+// ─── Modal with focus trap ───────────────────────────────────────────────────
+let modalTrigger = null;
+
+function openModal() {
+  modalTrigger = document.activeElement;
+  const overlay = document.getElementById('modal-overlay');
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  // Move focus to close button
+  setTimeout(() => {
+    overlay.querySelector('.modal-close').focus();
+  }, 50);
+}
+
 function closeModal() {
   document.getElementById('modal-overlay').classList.remove('open');
   document.body.style.overflow = '';
+  if (modalTrigger) modalTrigger.focus();
 }
+
 function handleOverlayClick(e) {
   if (e.target === document.getElementById('modal-overlay')) closeModal();
 }
 
+// Focus trap inside modal
+document.addEventListener('keydown', function(e) {
+  const overlay = document.getElementById('modal-overlay');
+  if (!overlay.classList.contains('open')) return;
+
+  if (e.key === 'Escape') { closeModal(); return; }
+
+  if (e.key === 'Tab') {
+    const focusable = overlay.querySelectorAll(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    );
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (e.shiftKey) {
+      if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+    } else {
+      if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+  }
+});
+
+// ─── Tool logic ──────────────────────────────────────────────────────────────
 const steps = [
   {
     id: 'ownership',
     eyebrow: 'Step 1 of 3 — Ownership',
-    title: 'Does this problem have a clear owner?',
+    title: 'Does this challenge have a clear owner?',
     desc: 'One person who is accountable for solving it, can make decisions, and can be held responsible for outcomes.',
     progress: 15,
     progressLabel: 'Step 1 of 3',
+    announce: 'Step 1 of 3. Ownership question.',
     options: [
       { label: 'Yes — one person owns it', sub: 'They have authority to approve and implement a solution.', next: 'policy' },
       { label: 'Not really — it\'s shared or unclear', sub: 'Multiple teams are involved but no one is clearly accountable.', result: 'r_ownership' },
@@ -739,10 +1002,11 @@ const steps = [
   {
     id: 'policy',
     eyebrow: 'Step 2 of 3 — Policy',
-    title: 'Are the rules around this problem clear?',
+    title: 'Are the rules around this challenge clear?',
     desc: 'Is there a documented policy or process that governs how this should work — and do people follow it consistently?',
     progress: 45,
     progressLabel: 'Step 2 of 3',
+    announce: 'Step 2 of 3. Policy question.',
     options: [
       { label: 'Yes — policy is clear and followed', sub: 'The rules exist and people know them.', next: 'visibility' },
       { label: 'The policy is missing or unclear', sub: 'People aren\'t sure what the right answer is in different situations.', result: 'r_policy' },
@@ -756,6 +1020,7 @@ const steps = [
     desc: 'Is the information organized and accessible, or is it buried in email threads, spreadsheets, or siloed systems?',
     progress: 75,
     progressLabel: 'Step 3 of 3',
+    announce: 'Step 3 of 3. Visibility question.',
     options: [
       { label: 'Yes — data is accessible and organized', sub: 'We have reporting, dashboards, or structured intake in place.', next: 'aifit' },
       { label: 'Requests or issues come in via email', sub: 'There\'s no structured intake — things get lost or manually tracked.', result: 'r_visibility' },
@@ -769,6 +1034,7 @@ const steps = [
     desc: 'Ownership is clear, policy is set, and data is visible. Now — what\'s the work that still needs doing?',
     progress: 90,
     progressLabel: 'Final step',
+    announce: 'Final step. AI fit question.',
     options: [
       { label: 'Synthesizing, matching, or generating across large volumes', sub: 'Examples: clinical matching, document summarization, drafting at scale.', result: 'r_ai' },
       { label: 'Applying precise rules or calculations reliably', sub: 'The logic can be written down explicitly.', result: 'r_rules' },
@@ -779,87 +1045,115 @@ const steps = [
 
 const results = {
   r_ownership: {
-    type: 'Type 1', typeClass: 't1',
+    type: 'Type 1', typeClass: 't1', resourceNote: true,
     title: 'This is an ownership problem',
     body: 'Before any tool decision can move forward, someone needs to be clearly accountable for solving this. Tools don\'t fill accountability gaps — they just make them more complicated.',
     sectionLabel: 'What to do first',
+    announce: 'Result: Type 1 — Ownership problem.',
     items: [
       'Name one accountable owner — not a committee or working group',
       'Clarify who needs to be consulted vs. who just needs to be informed',
       'Confirm the owner has authority to make and implement decisions',
       'Return to this tool once ownership is settled'
     ],
-    cta: 'The CoE can help you think through ownership and stakeholder mapping.',
+    cta: 'We can help you think through ownership and connect you with the right support.',
   },
   r_policy: {
-    type: 'Type 2', typeClass: 't2',
+    type: 'Type 2', typeClass: 't2', resourceNote: true,
     title: 'This is a policy problem',
     body: 'The process breaks down because the rules aren\'t clear. Adding a tool — AI or otherwise — on top of an unclear policy doesn\'t fix it. The policy needs to come first.',
     sectionLabel: 'What to do first',
+    announce: 'Result: Type 2 — Policy problem.',
     items: [
       'Draft or clarify the governing policy',
       'Identify and document edge cases and exceptions',
       'Pilot the policy manually before adding any tooling',
       'Once the policy is stable, revisit whether a tool would help scale it'
     ],
-    cta: 'The CoE can connect you with the right people to work through policy questions.',
+    cta: 'We can help you work through the policy questions and connect you with the right support.',
   },
   r_visibility: {
-    type: 'Type 3', typeClass: 't3',
+    type: 'Type 3', typeClass: 't3', resourceNote: true,
     title: 'This is a visibility problem',
     body: 'The information exists — it\'s just not organized or accessible. This is a form, integration, or dashboard problem. A well-built intake process and reporting layer often answers the question AI was being asked to answer.',
     sectionLabel: 'What to do first',
+    announce: 'Result: Type 3 — Visibility problem.',
     items: [
       'Replace email intake with a structured Qualtrics form — NYU has an institutional license',
       'Use Tableau (NYU\'s self-service reporting tool) for trend visibility and dashboards',
-      'Check whether Albert/SIS, ServiceLink, or Perceptive Content have underused features',
+      'Talk to NYU IT about what existing systems can already do — there is often more available than departments know about',
       'If a genuine gap remains after this, AI may be the right next step'
     ],
-    cta: 'The CoE can help you identify the right NYU tools and connect you with IT support.',
+    cta: "We can help you identify what's available and connect you with the right support.",
   },
   r_visibility2: {
-    type: 'Type 3', typeClass: 't3',
+    type: 'Type 3', typeClass: 't3', resourceNote: true,
     title: 'This is still a visibility problem',
     body: 'Even with the foundations in place, the remaining gap is about making data visible and understandable — not about AI. A dashboard or reporting layer is the right next step.',
     sectionLabel: 'What to do first',
+    announce: 'Result: Type 3 — Visibility problem.',
     items: [
       'Use Tableau for self-service reporting and trend dashboards',
-      'Check whether existing NYU systems (Albert, ServiceLink) have reporting you\'re not using',
+      'Talk to NYU IT about what reporting or workflow features are already available in your existing systems',
       'Build the visibility layer first — if a gap genuinely remains, come back to AI'
     ],
-    cta: 'The CoE can help you identify the right tool and connect you with IT.',
+    cta: "We can help you identify what's available and connect you with the right support.",
   },
   r_rules: {
-    type: 'Type 3½', typeClass: 't3',
+    type: 'Type 3½', typeClass: 't3', resourceNote: true,
     title: 'Consider structured automation before AI',
     body: 'If the logic can be written down explicitly, it doesn\'t need AI — it needs a rules engine, a workflow tool, or a well-configured form. AI is probabilistic; rule-based problems need deterministic solutions.',
     sectionLabel: 'What to try first',
+    announce: 'Result: Consider structured automation before AI.',
     items: [
       'Document the rules and edge cases in writing',
-      'Explore workflow automation through ServiceLink or Qualtrics logic',
+      'Talk to NYU IT about workflow automation options already available to your school or unit',
       'If 90% is rule-based and 10% is ambiguous, AI may help with the edge cases only'
     ],
-    cta: 'The CoE can help you scope what kind of automation fits your problem.',
+    cta: 'We can help you scope the right approach and connect you with the right support.',
   },
   r_ai: {
     type: 'Type 4', typeClass: 't4',
     title: 'You\'re ready for an AI conversation',
     body: 'Ownership is clear, policy is solid, and visibility is in place. The remaining gap involves synthesis, matching, or generation at scale — the kinds of work AI genuinely handles well. You\'re in a good position to explore this seriously.',
     sectionLabel: 'Good next steps',
+    announce: 'Result: Type 4 — AI-ready. You\'re ready for an AI conversation.',
     items: [
-      'Define the use case precisely: what is the input, what is the output, what does good look like?',
+      'Define the use case precisely: what is the input, what is the output, and what does success look like?',
       'Involve NYU IT early — especially on data access, security, and cost modeling',
-      'Start with a time-boxed pilot and measure against your original problem definition',
+      'Start with a time-boxed pilot and measure against your original challenge definition',
       'Set a usage budget before launch — cost runaway is the most common early failure'
     ],
-    cta: 'Reach out to the CoE — we can help you scope the project and connect you with NYU IT.',
+    cta: 'We can help you scope the project and connect you with the right support.',
   }
 };
 
 let history = [];
 let currentStep = 'ownership';
 
+function announce(msg) {
+  const el = document.getElementById('sr-announce');
+  el.textContent = '';
+  setTimeout(() => { el.textContent = msg; }, 50);
+}
+
 function getStep(id) { return steps.find(s => s.id === id); }
+
+function setProgress(pct, label) {
+  const fill = document.getElementById('progress-fill');
+  const bar = document.getElementById('progress-bar');
+  const lbl = document.getElementById('progress-label');
+  fill.style.width = pct + '%';
+  bar.setAttribute('aria-valuenow', pct);
+  lbl.textContent = label;
+}
+
+function focusFirstInteractive() {
+  setTimeout(() => {
+    const el = document.querySelector('#tool button, #tool a');
+    if (el) el.focus();
+  }, 50);
+}
 
 function render() {
   const tool = document.getElementById('tool');
@@ -872,40 +1166,43 @@ function render() {
   const step = getStep(currentStep);
   if (!step) return;
 
-  document.getElementById('progress-fill').style.width = step.progress + '%';
-  document.getElementById('progress-label').textContent = step.progressLabel;
+  setProgress(step.progress, step.progressLabel);
+  announce(step.announce);
 
   tool.innerHTML = `
-    <div class="card">
-      <div class="card-eyebrow">${step.eyebrow}</div>
-      <h2>${step.title}</h2>
+    <section class="card" aria-label="${step.eyebrow}">
+      <div class="card-eyebrow" aria-hidden="true">${step.eyebrow}</div>
+      <h2 id="step-heading">${step.title}</h2>
       <p class="card-desc">${step.desc}</p>
-      <div class="options">
+      <ul class="options" role="list" aria-labelledby="step-heading">
         ${step.options.map((o, i) => `
-          <button class="option" onclick="choose(${i})">
-            <div class="option-icon"></div>
-            <div class="option-text">
-              <strong>${o.label}</strong>
-              <span>${o.sub}</span>
-            </div>
-          </button>
+          <li>
+            <button
+              class="option"
+              onclick="choose(${i})"
+              aria-describedby="opt-sub-${i}"
+            >
+              <div class="option-icon" aria-hidden="true"></div>
+              <div class="option-text">
+                <strong>${o.label}</strong>
+                <span id="opt-sub-${i}">${o.sub}</span>
+              </div>
+            </button>
+          </li>
         `).join('')}
-      </div>
-      ${history.length > 0 ? `<button class="back-btn" onclick="back()">Back</button>` : ''}
-    </div>
+      </ul>
+      ${history.length > 0 ? `<button class="back-btn" aria-label="Go back to the previous question" onclick="back()"><span aria-hidden="true">←</span> Back to previous question</button>` : ''}
+    </section>
   `;
+
+  focusFirstInteractive();
 }
 
 function choose(i) {
   const step = getStep(currentStep);
   const option = step.options[i];
   history.push(currentStep);
-
-  if (option.result) {
-    currentStep = { result: option.result };
-  } else {
-    currentStep = option.next;
-  }
+  currentStep = option.result ? { result: option.result } : option.next;
   render();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
@@ -919,26 +1216,36 @@ function back() {
 function renderResult(key) {
   const r = results[key];
   const tool = document.getElementById('tool');
+  const resultId = 'next-steps-' + key;
 
-  document.getElementById('progress-fill').style.width = '100%';
-  document.getElementById('progress-label').textContent = 'Done';
+  setProgress(100, 'Complete');
+  announce(r.announce);
 
   tool.innerHTML = `
-    <div class="result-card ${r.typeClass}">
-      <div class="result-type-badge">${r.type}</div>
+    <section class="result-card ${r.typeClass}" aria-label="Your result: ${r.title}">
+      <div class="result-type-badge" aria-hidden="true">${r.type}</div>
       <h2>${r.title}</h2>
       <p class="result-body">${r.body}</p>
-      <div class="result-section-label">${r.sectionLabel}</div>
-      <div class="result-items">
-        ${r.items.map(item => `<div class="result-item">${item}</div>`).join('')}
+      <div class="result-section-label" id="${resultId}">${r.sectionLabel}</div>
+      <ul class="result-items" aria-labelledby="${resultId}">
+        ${r.items.map(item => `<li class="result-item">${item}</li>`).join('')}
+      </ul>
+      ${r.resourceNote ? `
+      <div style="margin:1.25rem 0 0;padding:0.9rem 1rem;background:rgba(0,0,0,0.04);border-radius:8px;border-left:3px solid rgba(0,0,0,0.2)" role="note" aria-label="A note on resources">
+        <p style="font-size:0.8rem;line-height:1.6;margin:0;color:#555555">Resolving this before reaching for AI also avoids unnecessary compute costs, staff time, and energy use. AI infrastructure has a real environmental footprint — getting to the right tool first is good practice and good stewardship.</p>
+      </div>` : ''}
+      <div class="cta-box" role="complementary" aria-label="Get support">
+        <p><strong>We can help.</strong> ${r.cta}</p>
+        <a href="mailto:ai-coe@nyu.edu" class="cta-btn">Get in touch <span aria-hidden="true">→</span></a>
       </div>
-      <div class="cta-box">
-        <p><strong>Want to talk it through?</strong>${r.cta}</p>
-        <a href="mailto:ai-coe@nyu.edu" class="cta-btn">Contact the CoE →</a>
-      </div>
+    </section>
+    <button class="back-btn" aria-label="Go back to the previous question" onclick="back()"><span aria-hidden="true">←</span> Back to previous question</button>
+    <div style="margin-top:2rem;padding-top:1.25rem;border-top:1px solid var(--border);text-align:center">
+      <button onclick="restart()" style="background:none;border:none;font-family:'Montserrat',sans-serif;font-size:0.8rem;color:var(--muted);cursor:pointer;text-decoration:underline;text-underline-offset:3px;" aria-label="Start the tool over from the beginning">Start over from the beginning</button>
     </div>
-    <button class="restart-btn" onclick="restart()">↺ Start over</button>
   `;
+
+  focusFirstInteractive();
 }
 
 function restart() {
