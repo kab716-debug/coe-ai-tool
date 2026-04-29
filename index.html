@@ -202,12 +202,98 @@
     padding: 3rem 1.5rem 5rem;
   }
 
-  /* Progress */
-  .progress-wrap {
+  /* Step indicator */
+  .step-indicator {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 2.5rem;
+    position: relative;
+  }
+  .step-indicator-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+  }
+  .step-indicator-item:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    top: 16px;
+    left: 50%;
+    width: 100%;
+    height: 2px;
+    background: var(--border);
+    z-index: 0;
+    transition: background 0.3s;
+  }
+  .step-indicator-item.done:not(:last-child)::after,
+  .step-indicator-item.active:not(:last-child)::after {
+    background: var(--nyu-purple);
+  }
+  .step-circle {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    background: white;
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    margin-bottom: 2.5rem;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--muted);
+    transition: all 0.3s;
+    position: relative;
+    z-index: 1;
+  }
+  .step-indicator-item.active .step-circle {
+    border-color: var(--nyu-purple);
+    background: var(--nyu-purple);
+    color: white;
+  }
+  .step-indicator-item.done .step-circle {
+    border-color: var(--nyu-purple);
+    background: var(--nyu-purple);
+    color: white;
+  }
+  .step-indicator-item.result .step-circle {
+    border-color: var(--nyu-purple);
+    background: var(--nyu-purple);
+    color: white;
+  }
+  .step-indicator-item.stopped .step-circle {
+    border-color: #D97706;
+    background: #FFFBEB;
+    color: #92400E;
+    font-weight: 700;
+  }
+  .step-indicator-item.stopped .step-label {
+    color: #92400E;
+    font-weight: 600;
+  }
+  .step-label {
+    font-size: 0.65rem;
+    font-weight: 500;
+    color: var(--muted);
+    margin-top: 0.4rem;
+    text-align: center;
+    letter-spacing: 0.03em;
+    line-height: 1.3;
+    transition: color 0.3s;
+  }
+  .step-indicator-item.active .step-label,
+  .step-indicator-item.done .step-label,
+  .step-indicator-item.result .step-label {
+    color: var(--nyu-purple);
+    font-weight: 600;
+  }
+  .step-restart-wrap {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1.5rem;
+    min-height: 1.25rem;
   }
   .restart-inline {
     background: none;
@@ -223,24 +309,8 @@
     transition: color 0.15s;
   }
   .restart-inline:hover { color: var(--ink); }
-  .progress-track {
-    flex: 1;
-    height: 4px;
-    background: var(--border);
-    border-radius: 2px;
-    overflow: hidden;
-  }
-  .progress-fill {
-    height: 100%;
-    background: var(--nyu-purple);
-    border-radius: 2px;
-    transition: width 0.4s ease;
-  }
-  .progress-label {
-    font-size: 0.75rem;
-    color: var(--muted);
-    white-space: nowrap;
-    font-weight: 500;
+  @media (prefers-reduced-motion: reduce) {
+    .step-circle, .step-label, .step-indicator-item::after { transition: none; }
   }
 
   /* Live region for screen readers */
@@ -356,7 +426,62 @@
     line-height: 1.5;
   }
 
-  /* Back btn */
+  /* Share buttons */
+  .share-row {
+    display: flex;
+    gap: 0.6rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+  }
+  .share-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: white;
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    padding: 0.45rem 0.9rem;
+    font-family: 'NYUPerstare', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--ink);
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .share-btn:hover { border-color: var(--nyu-purple); background: var(--nyu-light); }
+  .share-btn.copied { border-color: #059669; color: #065F46; background: #F0FDF8; }
+
+  /* Not sure hint */
+  .not-sure-wrap {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 0.5px solid var(--border);
+  }
+  .not-sure-btn {
+    background: none;
+    border: none;
+    font-family: 'NYUPerstare', sans-serif;
+    font-size: 0.8rem;
+    color: var(--muted);
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    padding: 0;
+    transition: color 0.15s;
+  }
+  .not-sure-btn:hover { color: var(--ink); }
+  .not-sure-hint {
+    margin-top: 0.75rem;
+    padding: 0.85rem 1rem;
+    background: var(--nyu-light);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 0.85rem;
+    line-height: 1.65;
+    color: var(--ink);
+    display: none;
+  }
+  .not-sure-hint.visible { display: block; }
   .back-btn {
     background: none;
     border: 1.5px solid var(--border);
@@ -719,24 +844,32 @@
   <h1>Is AI the right tool for your challenge?</h1>
   <p>Answer a few short questions to find out if AI is the right solution for you.</p>
   <div class="hero-actions">
-    <button class="all-types-btn" onclick="openModal()" aria-haspopup="dialog" aria-label="See how the framework works — opens a dialog">See how the framework works</button>
+    <button class="all-types-btn" onclick="openModal()" aria-haspopup="dialog" aria-label="See the path to AI-ready — opens a dialog">See the path to AI-ready</button>
   </div>
 </div>
 
 <main id="main-content">
-  <div class="progress-wrap">
-    <div
-      class="progress-track"
-      role="progressbar"
-      aria-valuemin="0"
-      aria-valuemax="100"
-      aria-valuenow="0"
-      aria-label="Tool progress"
-      id="progress-bar"
-    >
-      <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+
+  <nav class="step-indicator" aria-label="Framework steps">
+    <div class="step-indicator-item" id="step-ind-0" aria-current="step">
+      <div class="step-circle" id="step-circle-0" aria-hidden="true">1</div>
+      <div class="step-label">Ownership</div>
     </div>
-    <div class="progress-label" id="progress-label" aria-live="polite">Start</div>
+    <div class="step-indicator-item" id="step-ind-1">
+      <div class="step-circle" id="step-circle-1" aria-hidden="true">2</div>
+      <div class="step-label">Policy</div>
+    </div>
+    <div class="step-indicator-item" id="step-ind-2">
+      <div class="step-circle" id="step-circle-2" aria-hidden="true">3</div>
+      <div class="step-label">Visibility</div>
+    </div>
+    <div class="step-indicator-item" id="step-ind-3">
+      <div class="step-circle" id="step-circle-3" aria-hidden="true">4</div>
+      <div class="step-label">AI-ready</div>
+    </div>
+  </nav>
+
+  <div class="step-restart-wrap">
     <button class="restart-inline" id="restart-inline-btn" onclick="restart()" aria-label="Start the tool over from the beginning" style="display:none">Start over</button>
   </div>
 
@@ -755,9 +888,9 @@
   <div class="modal" id="modal">
     <button class="modal-close" onclick="closeModal()" aria-label="Close dialog">✕</button>
     <h2 id="modal-title">The path to AI-ready</h2>
-    <p class="modal-intro">Most problems that arrive as AI requests are actually an earlier type in disguise. Work through each type in order — resolving an earlier type often eliminates the need to go further.</p>
+    <p class="modal-intro">Before AI can do its best work, four things need to be in place. Most challenges that arrive as AI requests are missing one of the first three. Work through each in order — completing an earlier step often makes the next one easier or unnecessary.</p>
 
-    <ol style="list-style:none" aria-label="The four problem types">
+    <ol style="list-style:none" aria-label="The four steps to AI-ready">
       <li>
         <div class="type-row">
           <div class="type-row-num" aria-hidden="true">
@@ -765,9 +898,9 @@
             <div class="type-connector conn-1"></div>
           </div>
           <div class="type-row-content rc-1">
-            <div class="type-tag">Resolve first</div>
-            <h3>Ownership problem</h3>
-            <p>No one is clearly accountable. Tools don't fill ownership gaps — they make them more complicated. Name one owner before anything else.</p>
+            <div class="type-tag">Ownership</div>
+            <h3>Name one accountable owner</h3>
+            <p>Identify a single person — not a committee — who has the authority to make decisions and is responsible for outcomes. Without this, solutions stall at implementation regardless of how good they are.</p>
           </div>
         </div>
       </li>
@@ -778,9 +911,9 @@
             <div class="type-connector conn-2"></div>
           </div>
           <div class="type-row-content rc-2">
-            <div class="type-tag">Then check</div>
-            <h3>Policy problem</h3>
-            <p>The rules are unclear or missing. Automating ambiguity doesn't resolve it — it just makes it faster. Write the policy before building anything.</p>
+            <div class="type-tag">Policy</div>
+            <h3>Clarify the rules</h3>
+            <p>Make sure there's a clear, documented policy governing how this work should happen. If the rules are unclear or inconsistently followed, resolve that first — building on top of ambiguity tends to make it harder to see and fix.</p>
           </div>
         </div>
       </li>
@@ -791,9 +924,9 @@
             <div class="type-connector conn-3"></div>
           </div>
           <div class="type-row-content rc-3">
-            <div class="type-tag">Then check</div>
-            <h3>Visibility problem</h3>
-            <p>The data exists but no one can see it. Requests come in via email, reports are built by hand, there's no unified view. A Qualtrics or Google form and a Tableau or Looker Studio dashboard often solve what AI was being asked to solve.</p>
+            <div class="type-tag">Visibility</div>
+            <h3>Organize and surface your data</h3>
+            <p>Make sure the information relevant to your challenge is structured, accessible, and giving you visibility into what's actually happening. This might mean building an intake form, connecting existing systems, or creating reporting that surfaces patterns. Until this is in place, it's hard to know whether AI is adding value or masking gaps.</p>
           </div>
         </div>
       </li>
@@ -804,14 +937,14 @@
           </div>
           <div class="type-row-content rc-4">
             <div class="type-tag">AI-ready ✓</div>
-            <h3>AI-ready problem</h3>
-            <p>Types 1–3 are resolved. The remaining gap involves synthesis, pattern recognition, or generation at scale — the work AI genuinely does well. Now the AI conversation can happen on solid ground.</p>
+            <h3>Now explore AI</h3>
+            <p>With ownership clear, policy solid, and data visible, you're ready for an AI conversation. Define what AI will specifically do, involve NYU IT early, start with a pilot, and set a cost budget before you launch.</p>
           </div>
         </div>
       </li>
     </ol>
 
-    <p class="modal-footer-note">Most problems that arrive as Type 4 requests are actually Type 1, 2, or 3. That's not a failure — it's useful information, and it's a solvable thing.</p>
+    <p class="modal-footer-note">Most challenges that arrive as AI requests are actually stopped at step 1, 2, or 3. That's not a failure — it's useful information, and each step is solvable.</p>
     <button class="start-tool-btn" onclick="closeModal()">Start the tool <span aria-hidden="true">→</span></button>
   </div>
 </div>
@@ -1012,6 +1145,7 @@ const steps = [
     progress: 15,
     progressLabel: 'Step 1 of 3',
     announce: 'Step 1 of 3. Ownership question.',
+    notSureHint: 'Ask yourself: if a solution were built tomorrow, who would sign off on it? Who would maintain it? If you can\'t name one person confidently, ownership is likely unclear. Pick the option that best reflects what you\'ve observed.',
     options: [
       { label: 'Yes — one person owns it', sub: 'They have authority to approve and implement a solution.', next: 'policy' },
       { label: 'Not really — it\'s shared or unclear', sub: 'Multiple teams are involved but no one is clearly accountable.', result: 'r_ownership' },
@@ -1026,6 +1160,7 @@ const steps = [
     progress: 45,
     progressLabel: 'Step 2 of 3',
     announce: 'Step 2 of 3. Policy question.',
+    notSureHint: 'A useful signal: if you asked three different people how this should be handled, would they give the same answer? If not, the policy is likely unclear. If a policy exists but isn\'t followed, that still counts — pick the closest option.',
     options: [
       { label: 'Yes — policy is clear and followed', sub: 'The rules exist and people know them.', next: 'visibility' },
       { label: 'The policy is missing or unclear', sub: 'People aren\'t sure what the right answer is in different situations.', result: 'r_policy' },
@@ -1035,11 +1170,12 @@ const steps = [
   {
     id: 'visibility',
     eyebrow: 'Step 3 of 3 — Visibility',
-    title: 'Can people see what\'s happening with this problem?',
+    title: 'Can people see what\'s happening with this challenge?',
     desc: 'Is the information organized and accessible, or is it buried in email threads, spreadsheets, or siloed systems?',
     progress: 75,
     progressLabel: 'Step 3 of 3',
     announce: 'Step 3 of 3. Visibility question.',
+    notSureHint: 'Ask: if your manager asked for a summary of this challenge right now, could you pull one together quickly without digging through emails or spreadsheets? If no — visibility is likely the issue. Pick the option that most closely matches your situation.',
     options: [
       { label: 'Yes — data is accessible and organized', sub: 'We have reporting, dashboards, or structured intake in place.', next: 'aifit' },
       { label: 'Requests or issues come in via email', sub: 'There\'s no structured intake — things get lost or manually tracked.', result: 'r_visibility' },
@@ -1054,6 +1190,7 @@ const steps = [
     progress: 90,
     progressLabel: 'Final step',
     announce: 'Final step. AI fit question.',
+    notSureHint: 'Think about what you\'d actually ask AI to do. If it involves making sense of a large volume of unstructured information — text, documents, varied inputs — that\'s the first option. If the task follows clear rules that could be written down, that\'s the second. If the main need is better reporting or trend visibility, that\'s the third.',
     options: [
       { label: 'Synthesizing, matching, or generating across large volumes', sub: 'Examples: clinical matching, document summarization, drafting at scale.', result: 'r_ai' },
       { label: 'Applying precise rules or calculations reliably', sub: 'The logic can be written down explicitly.', result: 'r_rules' },
@@ -1066,7 +1203,7 @@ const results = {
   r_ownership: {
     type: 'Type 1', typeClass: 't1', resourceNote: true,
     title: 'This is an ownership problem',
-    body: 'Before any tool decision can move forward, someone needs to be clearly accountable for solving this. Tools don\'t fill accountability gaps — they just make them more complicated.',
+    body: 'The first thing to establish is who owns this challenge — one person with the authority to make decisions and be held responsible for outcomes. Tools rarely fill accountability gaps; they tend to make them harder to see.',
     sectionLabel: 'What to do first',
     announce: 'Result: Type 1 — Ownership problem.',
     items: [
@@ -1080,54 +1217,58 @@ const results = {
   r_policy: {
     type: 'Type 2', typeClass: 't2', resourceNote: true,
     title: 'This is a policy problem',
-    body: 'The process breaks down because the rules aren\'t clear. Adding a tool — AI or otherwise — on top of an unclear policy doesn\'t fix it. The policy needs to come first.',
+    body: 'The process may be breaking down because the rules aren\'t clear. Adding a tool — AI or otherwise — on top of an unclear policy rarely fixes it. The policy likely needs to come first.',
     sectionLabel: 'What to do first',
     announce: 'Result: Type 2 — Policy problem.',
     items: [
       'Draft or clarify the governing policy',
       'Identify and document edge cases and exceptions',
       'Pilot the policy manually before adding any tooling',
-      'Once the policy is stable, revisit whether a tool would help scale it'
+      'Once the policy is stable, revisit whether a tool would help scale it',
+      'A conversational AI tool can help you draft policy language, identify edge cases, or pressure-test your rules before circulating them'
     ],
     cta: 'We can help you work through the policy questions and connect you with the right support.',
   },
   r_visibility: {
     type: 'Type 3', typeClass: 't3', resourceNote: true,
     title: 'This is a visibility problem',
-    body: 'The information exists — it\'s just not organized or accessible. This is a form, integration, or dashboard problem. A well-built intake process and reporting layer often answers the question AI was being asked to answer.',
+    body: 'The information exists — it\'s just not organized or accessible. This might be a form, integration, or dashboard problem. A well-built intake process and reporting layer often answers the question AI was being asked to answer.',
     sectionLabel: 'What to do first',
     announce: 'Result: Type 3 — Visibility problem.',
     items: [
       'Replace email intake with a structured Qualtrics or Google form — NYU has an institutional license',
       'Use Tableau or Google\'s Looker Studio (NYU\'s self-service reporting tools) for trend visibility and dashboards',
       'Talk to NYU IT about what existing systems can already do — there is often more available than departments know about',
-      'If a genuine gap remains after this, AI may be the right next step'
+      'If a genuine gap remains after this, AI may be the right next step',
+      'A conversational AI tool can help you draft intake form questions, write a dashboard spec, or clarify what data you actually need to capture'
     ],
     cta: "We can help you identify what's available and connect you with the right support.",
   },
   r_visibility2: {
     type: 'Type 3', typeClass: 't3', resourceNote: true,
     title: 'This is still a visibility problem',
-    body: 'Even with the foundations in place, the remaining gap is about making data visible and understandable — not about AI. A dashboard or reporting layer is the right next step.',
+    body: 'Even with the foundations in place, the remaining gap may be about making data visible and understandable rather than about AI. A dashboard or reporting layer is likely the right next step.',
     sectionLabel: 'What to do first',
     announce: 'Result: Type 3 — Visibility problem.',
     items: [
       'Use Tableau or Google\'s Looker Studio for self-service reporting and trend dashboards',
       'Talk to NYU IT about what reporting or workflow features are already available in your existing systems',
-      'Build the visibility layer first — if a gap genuinely remains, come back to AI'
+      'Build the visibility layer first — if a gap genuinely remains, come back to AI',
+      'A conversational AI tool can help you think through what to measure, how to structure your data, or what questions your dashboard should answer'
     ],
     cta: "We can help you identify what's available and connect you with the right support.",
   },
   r_rules: {
     type: 'Type 3½', typeClass: 't3', resourceNote: true,
     title: 'Consider structured automation before AI',
-    body: 'If the logic can be written down explicitly, it doesn\'t need AI — it needs a rules engine, a workflow tool, or a well-configured form. AI is probabilistic; rule-based problems need deterministic solutions.',
+    body: 'If the logic can be written down explicitly, a rules engine, workflow tool, or well-configured form will likely serve you better than AI.',
     sectionLabel: 'What to try first',
     announce: 'Result: Consider structured automation before AI.',
     items: [
       'Document the rules and edge cases in writing',
       'Talk to NYU IT about workflow automation options already available to your school or unit',
-      'If 90% is rule-based and 10% is ambiguous, AI may help with the edge cases only'
+      'If 90% is rule-based and 10% is ambiguous, AI may help with the edge cases only',
+      'A conversational AI tool can help you write out the rules clearly, stress-test the logic, or draft the workflow spec'
     ],
     cta: 'We can help you scope the right approach and connect you with the right support.',
   },
@@ -1158,20 +1299,59 @@ function announce(msg) {
 
 function getStep(id) { return steps.find(s => s.id === id); }
 
+const stepMap = { ownership: 0, policy: 1, visibility: 2, aifit: 3 };
+
+function setStepIndicator(currentStepId, isResultOrHistoryLen) {
+  const isResult = currentStepId === null;
+  const completedCount = typeof isResultOrHistoryLen === 'number' ? isResultOrHistoryLen : 0;
+  const activeIndex = isResult ? 4 : (stepMap[currentStepId] ?? 0);
+  for (let i = 0; i < 4; i++) {
+    const item = document.getElementById('step-ind-' + i);
+    const circle = document.getElementById('step-circle-' + i);
+    if (!item) continue;
+    item.classList.remove('active', 'done', 'stopped');
+    item.removeAttribute('aria-current');
+    circle.innerHTML = i + 1;
+    if (isResult) {
+      if (i < completedCount - 1) {
+        // fully passed steps get checkmark
+        item.classList.add('done');
+        circle.innerHTML = '✓';
+      } else if (i === completedCount - 1) {
+        // the step where we stopped — ! for non-AI results, ✓ for AI-ready
+        if (completedCount === 4) {
+          item.classList.add('done');
+          circle.innerHTML = '✓';
+        } else {
+          item.classList.add('stopped');
+          circle.innerHTML = '!';
+        }
+      }
+      // future steps stay plain
+    } else if (i < activeIndex) {
+      item.classList.add('done');
+      circle.innerHTML = '✓';
+    } else if (i === activeIndex) {
+      item.classList.add('active');
+      item.setAttribute('aria-current', 'step');
+    }
+  }
+}
+
 function setProgress(pct, label) {
-  const fill = document.getElementById('progress-fill');
-  const bar = document.getElementById('progress-bar');
-  const lbl = document.getElementById('progress-label');
-  fill.style.width = pct + '%';
-  bar.setAttribute('aria-valuenow', pct);
-  lbl.textContent = label;
+  // kept for backward compat but now drives step indicator
 }
 
 function focusFirstInteractive() {
-  setTimeout(() => {
-    const el = document.querySelector('#tool button, #tool a');
-    if (el) el.focus();
-  }, 50);
+  window.scrollTo({ top: 0, behavior: 'instant' });
+  // Only auto-focus on non-touch devices — on mobile it creates a false selected state
+  const isTouch = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+  if (!isTouch) {
+    setTimeout(() => {
+      const el = document.querySelector('#tool button, #tool a');
+      if (el) el.focus({ preventScroll: true });
+    }, 80);
+  }
 }
 
 function showRestartBtn(show) {
@@ -1191,6 +1371,7 @@ function render() {
   if (!step) return;
 
   setProgress(step.progress, step.progressLabel);
+  setStepIndicator(step.id, false);
   announce(step.announce);
 
   tool.innerHTML = `
@@ -1215,6 +1396,11 @@ function render() {
           </li>
         `).join('')}
       </ul>
+      ${step.notSureHint ? `
+      <div class="not-sure-wrap">
+        <button class="not-sure-btn" onclick="toggleHint(this)" aria-expanded="false" aria-controls="not-sure-hint">Not sure which to pick?</button>
+        <div class="not-sure-hint" id="not-sure-hint" role="note">${step.notSureHint}</div>
+      </div>` : ''}
       ${history.length > 0 ? `<button class="back-btn" aria-label="Go back to the previous question" onclick="back()">Back</button>` : ''}
     </section>
   `;
@@ -1229,14 +1415,14 @@ function choose(i) {
   currentStep = option.result ? { result: option.result } : option.next;
   showRestartBtn(true);
   render();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  window.scrollTo({ top: 0, behavior: 'instant' });
 }
 
 function back() {
   currentStep = history.pop();
   showRestartBtn(history.length > 0);
   render();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  window.scrollTo({ top: 0, behavior: 'instant' });
 }
 
 function renderResult(key) {
@@ -1245,6 +1431,7 @@ function renderResult(key) {
   const resultId = 'next-steps-' + key;
 
   setProgress(100, 'Complete');
+  setStepIndicator(null, history.length);
   announce(r.announce);
 
   tool.innerHTML = `
@@ -1256,29 +1443,94 @@ function renderResult(key) {
       <ul class="result-items" aria-labelledby="${resultId}">
         ${r.items.map(item => `<li class="result-item">${item}</li>`).join('')}
       </ul>
-      ${r.resourceNote ? `
-      <div style="margin:1.25rem 0 0;padding:0.9rem 1rem;background:rgba(0,0,0,0.04);border-radius:8px;border-left:3px solid rgba(0,0,0,0.2)" role="note" aria-label="A note on resources">
-        <p style="font-size:0.8rem;line-height:1.6;margin:0;color:#555555">Resolving this before reaching for AI also avoids unnecessary compute costs, staff time, and energy use. AI infrastructure has a real environmental footprint — getting to the right tool first is good practice and good stewardship.</p>
-      </div>` : ''}
+
       <div class="cta-box" role="complementary" aria-label="Get support">
         <p><strong>We can help.</strong> ${r.cta}</p>
+        ${r.resourceNote ? `<p style="font-size:0.8rem;color:rgba(255,255,255,0.7);margin-top:0.5rem;line-height:1.6">Not sure where to start? Try describing your challenge to <a href="https://gemini.google.com/app" target="_blank" rel="noopener noreferrer" style="color:rgba(255,255,255,0.9);text-decoration:underline;text-underline-offset:2px;">Google Gemini</a> first — it can help clarify your thinking before you reach out.</p>` : ''}
         <a href="mailto:ai-coe@nyu.edu" class="cta-btn">Get in touch <span aria-hidden="true">→</span></a>
       </div>
     </section>
     <button class="back-btn" aria-label="Go back to the previous question" onclick="back()">Back</button>
+    <div class="share-row" aria-label="Share your result">
+      <button class="share-btn" onclick="copyResult('${key}')" id="copy-btn" aria-label="Copy result to clipboard">
+        Copy result
+      </button>
+      <button class="share-btn" onclick="shareUrl('${key}')" aria-label="Copy shareable link">
+        Share link
+      </button>
+    </div>
   `;
 
   focusFirstInteractive();
+}
+
+function toggleHint(btn) {
+  const hint = document.getElementById('not-sure-hint');
+  const isVisible = hint.classList.contains('visible');
+  hint.classList.toggle('visible', !isVisible);
+  btn.setAttribute('aria-expanded', !isVisible);
+  btn.textContent = isVisible ? 'Not sure which to pick?' : 'Hide hint';
+}
+
+function copyResult(key) {
+  const r = results[key];
+  const text = `NYU AI Decision Tool — ${r.title}\n\n${r.body}\n\n${r.sectionLabel}:\n${r.items.map((item, i) => `${i + 1}. ${item}`).join('\n')}\n\nTool: ${window.location.href.split('?')[0]}`;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById('copy-btn');
+    if (btn) {
+      btn.classList.add('copied');
+      btn.innerHTML = 'Copied';
+      setTimeout(() => {
+        btn.classList.remove('copied');
+        btn.innerHTML = 'Copy result';
+      }, 2500);
+    }
+  }).catch(() => {
+    alert('Unable to copy — try selecting and copying the text manually.');
+  });
+}
+
+function shareUrl(key) {
+  const url = window.location.href.split('?')[0] + '?result=' + key;
+  navigator.clipboard.writeText(url).then(() => {
+    const btns = document.querySelectorAll('.share-btn');
+    btns.forEach(b => {
+      if (b.textContent.includes('Share link')) {
+        b.classList.add('copied');
+        b.innerHTML = 'Link copied';
+        setTimeout(() => {
+          b.classList.remove('copied');
+          b.innerHTML = 'Share link';
+        }, 2500);
+      }
+    });
+  }).catch(() => {
+    prompt('Copy this link:', window.location.href.split('?')[0] + '?result=' + key);
+  });
+}
+
+// Load result from URL on page load
+function checkUrlResult() {
+  const params = new URLSearchParams(window.location.search);
+  const resultKey = params.get('result');
+  if (resultKey && results[resultKey]) {
+    currentStep = { result: resultKey };
+    showRestartBtn(true);
+  }
 }
 
 function restart() {
   history = [];
   currentStep = 'ownership';
   showRestartBtn(false);
+  // Clear URL param without reloading
+  const url = window.location.pathname;
+  window.history.replaceState({}, '', url);
   render();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  window.scrollTo({ top: 0, behavior: 'instant' });
 }
 
+checkUrlResult();
 render();
 </script>
 </body>
