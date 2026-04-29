@@ -273,6 +273,20 @@
     color: #92400E;
     font-weight: 600;
   }
+  #step-ind-gaps .step-circle {
+    font-size: 0.65rem;
+    border-style: dashed;
+  }
+  #step-ind-gaps.active .step-circle {
+    border-color: #D97706;
+    background: #D97706;
+    color: white;
+    border-style: solid;
+  }
+  #step-ind-gaps.active .step-label {
+    color: #D97706;
+    font-weight: 600;
+  }
   .step-label {
     font-size: 0.65rem;
     font-weight: 500;
@@ -425,6 +439,47 @@
     font-weight: 400;
     line-height: 1.5;
   }
+
+  /* Prompt block */
+  .prompt-block {
+    margin-top: 1rem;
+    padding: 0.85rem 1rem;
+    background: white;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+  }
+  .prompt-label {
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .prompt-text {
+    font-size: 0.82rem;
+    line-height: 1.65;
+    color: var(--ink);
+    font-style: italic;
+    margin: 0;
+  }
+  .prompt-copy-btn {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0.2rem 0.6rem;
+    font-family: 'NYUPerstare', sans-serif;
+    font-size: 0.7rem;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .prompt-copy-btn:hover { border-color: var(--nyu-purple); color: var(--nyu-purple); }
+  .prompt-copy-btn.copied { border-color: #059669; color: #059669; }
 
   /* Accordion detail */
   .accordion-detail {
@@ -880,6 +935,10 @@
       <div class="step-circle" id="step-circle-2" aria-hidden="true">3</div>
       <div class="step-label">Visibility</div>
     </div>
+    <div class="step-indicator-item" id="step-ind-gaps">
+      <div class="step-circle" id="step-circle-gaps" aria-hidden="true">→</div>
+      <div class="step-label">Close gaps</div>
+    </div>
     <div class="step-indicator-item" id="step-ind-3">
       <div class="step-circle" id="step-circle-3" aria-hidden="true">4</div>
       <div class="step-label">AI-ready</div>
@@ -1171,8 +1230,22 @@ const steps = [
     ]
   },
   {
-    id: 'policy',
+    id: 'data_ownership',
     index: 1,
+    eyebrow: 'Step 1b — Data responsibility',
+    title: 'Is someone responsible for the data involved in this challenge?',
+    desc: 'AI projects often involve sensitive or regulated data. Someone needs to be accountable for how it is stored, accessed, and protected.',
+    announce: 'Step 1b. Data responsibility question.',
+    notSureHint: 'Think about the data this challenge touches — student records, research data, health information, personnel files. Is there a named person responsible for ensuring it is handled correctly? At NYU, this may involve FERPA compliance, IRB considerations, or IT security review. If you are unsure, that is itself a signal.',
+    options: [
+      { label: 'Yes — someone owns data responsibility', sub: 'A named person is accountable for safe, compliant data handling.', status: 'pass', resultKey: null },
+      { label: 'Not clearly — data responsibility is assumed or shared', sub: 'No one is explicitly accountable for data handling and compliance.', status: 'flag', resultKey: 'r_data_ownership' },
+      { label: 'This challenge doesn\'t involve sensitive data', sub: 'No personal, regulated, or institutional data is involved.', status: 'pass', resultKey: null },
+    ]
+  },
+  {
+    id: 'policy',
+    index: 2,
     eyebrow: 'Step 2 of 4 — Policy',
     title: 'Are the rules around this challenge clear?',
     desc: 'Is there a documented policy or process that governs how this should work — and do people follow it consistently?',
@@ -1186,7 +1259,7 @@ const steps = [
   },
   {
     id: 'visibility',
-    index: 2,
+    index: 3,
     eyebrow: 'Step 3 of 4 — Visibility',
     title: 'Can people see what\'s happening with this challenge?',
     desc: 'Is the information organized and accessible, or is it buried in email threads, spreadsheets, or siloed systems?',
@@ -1200,7 +1273,7 @@ const steps = [
   },
   {
     id: 'aifit',
-    index: 3,
+    index: 4,
     eyebrow: 'Step 4 of 4 — AI fit',
     title: 'What does the remaining gap actually look like?',
     desc: 'Now — what\'s the work that still needs doing?',
@@ -1230,6 +1303,25 @@ const results = {
       'A conversational AI tool can help you draft a stakeholder map, clarify roles, or think through accountability structures before your next conversation'
     ],
     cta: 'We can help you think through ownership and connect you with the right support.',
+    prompt: "I'm trying to figure out who should own a challenge within my unit. Here's the situation: [describe]. Help me think through who needs to be involved, who should have final decision-making authority, and what that person's responsibilities would look like.",
+  },
+  r_data_ownership: {
+    type: 'Type 1b', typeClass: 't1', resourceNote: true,
+    label: 'Data responsibility',
+    shortTitle: 'Needs attention',
+    title: 'Data responsibility needs to be established',
+    body: 'AI projects that involve sensitive or regulated data need a named person accountable for how that data is stored, accessed, and protected. Without this, even well-intentioned projects can create compliance, privacy, or security risks.',
+    sectionLabel: 'What to do first',
+    announce: 'Result: Data responsibility needs to be established.',
+    items: [
+      'Name a person responsible for data handling and compliance — not a team, one person',
+      'Identify what data the challenge involves — student records, research data, health information, personnel files',
+      'Check whether FERPA, IRB, HIPAA, or other compliance frameworks apply',
+      'Involve NYU IT Security early — they can advise on data classification and access controls',
+      'A conversational AI tool can help you draft a data responsibility checklist or think through what compliance considerations apply'
+    ],
+    cta: 'We can help you identify the right compliance contacts and connect you with NYU IT Security.',
+    prompt: "I'm working on a project that involves [describe the data]. Help me think through what data privacy or compliance considerations I should be aware of, who should be responsible for handling this data safely, and what questions I should ask my IT or institutional research team.",
   },
   r_policy: {
     type: 'Type 2', typeClass: 't2', resourceNote: true,
@@ -1247,6 +1339,7 @@ const results = {
       'A conversational AI tool can help you draft policy language, identify edge cases, or pressure-test your rules before circulating them'
     ],
     cta: 'We can help you work through the policy questions and connect you with the right support.',
+    prompt: "I'm working on a challenge where the rules or process aren't clear. Here's the situation: [describe]. Help me draft a clear policy or set of guidelines that would resolve this, including how to handle edge cases.",
   },
   r_visibility: {
     type: 'Type 3', typeClass: 't3', resourceNote: true,
@@ -1264,6 +1357,7 @@ const results = {
       'A conversational AI tool can help you draft intake form questions, write a dashboard spec, or clarify what data you actually need to capture'
     ],
     cta: "We can help you identify what's available and connect you with the right support.",
+    prompt: "I'm trying to get better visibility into [describe the challenge]. Right now information comes in through [email/spreadsheets/etc.]. Help me think through how to structure intake and reporting so I can actually see what's happening.",
   },
   r_visibility2: {
     type: 'Type 3', typeClass: 't3', resourceNote: true,
@@ -1280,6 +1374,7 @@ const results = {
       'A conversational AI tool can help you think through what to measure, how to structure your data, or what questions your dashboard should answer'
     ],
     cta: "We can help you identify what's available and connect you with the right support.",
+    prompt: "I'm trying to get better visibility into [describe the challenge]. Right now information comes in through [email/spreadsheets/etc.]. Help me think through how to structure intake and reporting so I can actually see what's happening.",
   },
   r_rules: {
     type: 'Type 3½', typeClass: 't3', resourceNote: true,
@@ -1296,6 +1391,7 @@ const results = {
       'A conversational AI tool can help you write out the rules clearly, stress-test the logic, or draft the workflow spec'
     ],
     cta: 'We can help you scope the right approach and connect you with the right support.',
+    prompt: "I'm working on a challenge where the process follows clear rules. Here's the situation: [describe]. Help me map out the logic and identify what a structured workflow or automation might look like before I consider AI.",
   },
   r_ai: {
     type: 'Type 4', typeClass: 't4',
@@ -1331,11 +1427,24 @@ function announce(msg) {
 }
 
 // ─── Step indicator ───────────────────────────────────────────────────────────
-const stepMap = { ownership: 0, policy: 1, visibility: 2, aifit: 3 };
+const stepMap = { ownership: 0, data_ownership: 1, policy: 2, visibility: 3, aifit: 4 };
 
-function setStepIndicator(activeIndex, finalAnswers) {
+function setStepIndicator(activeIndex, finalAnswers, showGapsActive) {
   const answersToUse = finalAnswers || answers;
-  const earlierFlagged = [0,1,2].some(i => answersToUse[i] && answersToUse[i].status === 'flag');
+  const earlierFlagged = [0,1,2,3].some(i => answersToUse[i] && answersToUse[i].status === 'flag');
+
+  // Handle gaps circle
+  const gapsItem = document.getElementById('step-ind-gaps');
+  const gapsCircle = document.getElementById('step-circle-gaps');
+  if (gapsItem && gapsCircle) {
+    gapsItem.classList.remove('active', 'done', 'stopped');
+    gapsItem.removeAttribute('aria-current');
+    gapsCircle.innerHTML = '→';
+    if (showGapsActive) {
+      gapsItem.classList.add('active');
+      gapsItem.setAttribute('aria-current', 'step');
+    }
+  }
 
   for (let i = 0; i < 4; i++) {
     const item = document.getElementById('step-ind-' + i);
@@ -1345,14 +1454,26 @@ function setStepIndicator(activeIndex, finalAnswers) {
     item.removeAttribute('aria-current');
     circle.innerHTML = i + 1;
 
-    const ans = answersToUse[i];
-    if (ans) {
-      // AI-fit (step 4) can only be green if all earlier steps passed
-      const effectiveStatus = (i === 3 && earlierFlagged) ? 'flag' : ans.status;
-      if (effectiveStatus === 'pass') { item.classList.add('done'); circle.innerHTML = '✓'; }
+    // Map visual step index to answer indices (data_ownership shares visual step 0 with ownership)
+    // Visual: 0=ownership+data, 1=policy, 2=visibility, 3=aifit
+    const ansIndices = [[0,1],[2],[3],[4]];
+    const relevantAnswers = ansIndices[i].map(idx => answersToUse[idx]).filter(Boolean);
+    const hasFlag = relevantAnswers.some(a => a.status === 'flag');
+    const hasAny = relevantAnswers.length > 0;
+    const allAnswered = ansIndices[i].every(idx => {
+      // data_ownership only asked if ownership passed
+      if (idx === 1) return !answersToUse[0] || answersToUse[0].status !== 'pass' || answersToUse[1];
+      return answersToUse[idx];
+    });
+
+    const effectiveFlag = hasFlag || (i === 3 && earlierFlagged);
+
+    if (hasAny && allAnswered) {
+      if (!effectiveFlag) { item.classList.add('done'); circle.innerHTML = '✓'; }
       else { item.classList.add('stopped'); circle.innerHTML = '!'; }
-    } else if (finalAnswers === null) {
-      if (i === activeIndex) { item.classList.add('active'); item.setAttribute('aria-current', 'step'); }
+    } else if (!showGapsActive && finalAnswers === null) {
+      const activeVisualIndex = [0,1,2,3].find(vi => ansIndices[vi].some(idx => idx === activeIndex));
+      if (i === activeVisualIndex) { item.classList.add('active'); item.setAttribute('aria-current', 'step'); }
     }
   }
 }
@@ -1425,6 +1546,25 @@ function choose(i) {
   history.push(currentStepIndex);
   showRestartBtn(true);
 
+  // If ownership fails, skip data_ownership and go straight to policy
+  if (step.id === 'ownership' && option.status === 'flag') {
+    currentStepIndex += 2; // skip data_ownership
+    render();
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    return;
+  }
+
+  // After visibility (step 3 of 3), check if any earlier steps flagged
+  // If yes, show the gap screen instead of proceeding to AI fit
+  if (step.id === 'visibility') {
+    const earlyFlags = [0,1,2,3].some(idx => answers[idx] && answers[idx].status === 'flag');
+    if (earlyFlags) {
+      renderGapScreen();
+      window.scrollTo({ top: 0, behavior: 'instant' });
+      return;
+    }
+  }
+
   if (currentStepIndex < steps.length - 1) {
     currentStepIndex++;
     render();
@@ -1454,6 +1594,87 @@ function restart() {
   window.scrollTo({ top: 0, behavior: 'instant' });
 }
 
+// ─── Gap screen ───────────────────────────────────────────────────────────────
+function renderGapScreen() {
+  const tool = document.getElementById('tool');
+  setStepIndicator(null, answers, true);
+  announce('A few things need attention before exploring AI.');
+
+  const stepDefs = [
+    { label: 'Ownership',         answerIndex: 0 },
+    { label: 'Data responsibility',answerIndex: 1 },
+    { label: 'Policy',            answerIndex: 2 },
+    { label: 'Visibility',        answerIndex: 3 },
+  ];
+
+  const flaggedRows = stepDefs
+    .filter(sd => answers[sd.answerIndex] && answers[sd.answerIndex].status === 'flag')
+    .map(sd => {
+      const r = results[answers[sd.answerIndex].resultKey];
+      if (!r) return '';
+      const accordionId = 'gap-accordion-' + sd.answerIndex;
+      if (r.prompt) window._promptMap = window._promptMap || {};
+      if (r.prompt) window._promptMap[accordionId] = r.prompt;
+      const itemsHtml = r.items.map(item =>
+        '<li style="display:flex;gap:0.5rem;font-size:0.85rem;color:#78350F;padding:0.3rem 0;border-bottom:0.5px solid rgba(0,0,0,0.08);line-height:1.5"><span aria-hidden="true" style="opacity:0.4;flex-shrink:0">—</span>' + item + '</li>'
+      ).join('');
+      const promptHtml = r.prompt
+        ? '<div class="prompt-block"><div class="prompt-label">Try this in Google Gemini</div><p class="prompt-text">&ldquo;' + r.prompt.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '&rdquo;</p></div>'
+        : '';
+      return '<div style="margin-bottom:0.6rem">'
+        + '<button class="accordion-trigger" onclick="toggleAccordion(\'' + accordionId + '\', this)"'
+        + ' style="width:100%;display:flex;align-items:center;gap:1rem;padding:0.85rem 1rem;background:#FFF8EE;border:1.5px solid #D97706;border-radius:10px;cursor:pointer;text-align:left;font-family:\'NYUPerstare\',sans-serif;transition:border-radius 0.15s"'
+        + ' aria-expanded="false" aria-controls="' + accordionId + '"'
+        + ' aria-label="Toggle details for ' + sd.label + '">'
+        + '<div style="width:28px;height:28px;border-radius:50%;background:#D97706;color:white;display:flex;align-items:center;justify-content:center;font-size:0.85rem;font-weight:700;flex-shrink:0" aria-hidden="true">!</div>'
+        + '<div style="flex:1">'
+        + '<div style="font-size:0.7rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:#92400E;margin-bottom:0.1rem">' + sd.label + '</div>'
+        + '<div style="font-size:0.9rem;font-weight:500;color:#78350F">' + r.shortTitle + '</div>'
+        + '</div>'
+        + '<span class="accordion-chevron" aria-hidden="true" style="font-size:0.8rem;color:#92400E">▾</span>'
+        + '</button>'
+        + '<div class="accordion-detail" id="' + accordionId + '" role="region" aria-label="' + sd.label + ' details">'
+        + '<p style="font-size:0.875rem;line-height:1.65;color:#78350F;margin-bottom:0.85rem">' + r.body + '</p>'
+        + '<div style="font-size:0.7rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:#92400E;margin-bottom:0.5rem">' + r.sectionLabel + '</div>'
+        + '<ul style="list-style:none;padding:0;margin:0 0 0.85rem">' + itemsHtml + '</ul>'
+        + promptHtml
+        + '</div></div>';
+    }).join('');
+
+  tool.innerHTML = `
+    <section aria-label="Close the gaps before AI">
+      <div style="margin-bottom:1.5rem">
+        <div style="font-size:0.72rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--nyu-purple);margin-bottom:0.5rem">Almost there</div>
+        <h2 style="font-size:1.55rem;font-weight:700;color:var(--ink);margin-bottom:0.75rem;line-height:1.3">You're so close.</h2>
+        <p style="font-size:0.95rem;color:var(--muted);line-height:1.7">A few things need attention before it makes sense to explore AI. Closing these gaps first will set you up for a much stronger conversation about what AI can actually do for your challenge.</p>
+      </div>
+
+      <div role="list" aria-label="Steps needing attention">
+        ${flaggedRows}
+      </div>
+
+      <div style="margin:1.25rem 0 0.75rem;padding:1rem;background:var(--nyu-light);border-radius:10px;border-left:3px solid var(--nyu-purple)">
+        <p style="font-size:0.9rem;line-height:1.65;color:var(--ink);margin:0">Once these are in place, come back and run through the tool again — you'll likely land on a very different result.</p>
+      </div>
+
+      <div class="cta-box" role="complementary" aria-label="Get support">
+        <p><strong>We can help.</strong> We can work through these steps with you and connect you with the right support.</p>
+        <p style="font-size:0.8rem;color:rgba(255,255,255,0.7);margin-top:0.5rem;line-height:1.6">Not sure where to start? Try describing your challenge to <a href="https://gemini.google.com/app" target="_blank" rel="noopener noreferrer" style="color:rgba(255,255,255,0.9);text-decoration:underline;text-underline-offset:2px;">Google Gemini</a> first — it can help clarify your thinking before you reach out.</p>
+        <a href="mailto:ai-coe@nyu.edu" class="cta-btn">Get in touch <span aria-hidden="true">→</span></a>
+      </div>
+
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;margin-top:1rem;padding-top:1rem;border-top:0.5px solid var(--border)">
+        <button class="back-btn" style="margin-top:0" aria-label="Go back to the previous question" onclick="back()">Back</button>
+        <div style="display:flex;gap:0.5rem">
+          <button class="share-btn" onclick="copyRoadmap()" id="copy-btn" aria-label="Copy results to clipboard">Copy results</button>
+          <button class="share-btn" onclick="shareUrl('gap')" aria-label="Copy shareable link">Share link</button>
+        </div>
+      </div>
+    </section>
+  `;
+  focusFirstInteractive();
+}
+
 // ─── Roadmap ──────────────────────────────────────────────────────────────────
 function renderRoadmap() {
   const tool = document.getElementById('tool');
@@ -1462,12 +1683,13 @@ function renderRoadmap() {
 
   const stepDefs = [
     { label: 'Ownership', answerIndex: 0 },
-    { label: 'Policy',    answerIndex: 1 },
-    { label: 'Visibility',answerIndex: 2 },
-    { label: 'AI fit',    answerIndex: 3 },
+    { label: 'Data responsibility', answerIndex: 1 },
+    { label: 'Policy',    answerIndex: 2 },
+    { label: 'Visibility',answerIndex: 3 },
+    { label: 'AI fit',    answerIndex: 4 },
   ];
 
-  const earlierFlagged = [0,1,2].some(i => answers[i] && answers[i].status === 'flag');
+  const earlierFlagged = [0,1,2,3].some(i => answers[i] && answers[i].status === 'flag');
   const allPass = Object.values(answers).every(a => a.status === 'pass') && !earlierFlagged;
   const flags = Object.values(answers).filter(a => a.status === 'flag').length;
 
@@ -1477,11 +1699,14 @@ function renderRoadmap() {
     ? 'One step needs attention before you\'re AI-ready. Start there — the others look good.'
     : `${flags} steps need attention. Work through them in order — resolving an earlier step often makes the next one easier.`;
 
+  const promptMap = {};
+
   const roadmapRows = stepDefs.map((sd, i) => {
     const ans = answers[i];
     const isPass = ans && ans.status === 'pass';
     const resultKey = ans && ans.resultKey;
     const r = resultKey ? results[resultKey] : null;
+    if (r && r.prompt) promptMap['accordion-' + i] = r.prompt;
 
     if (isPass) {
       return `
@@ -1494,37 +1719,38 @@ function renderRoadmap() {
         </div>`;
     } else if (r) {
       const accordionId = 'accordion-' + i;
-      return `
-        <div style="margin-bottom:0.6rem">
-          <button
-            class="accordion-trigger"
-            onclick="toggleAccordion('${accordionId}', this)"
-            style="width:100%;display:flex;align-items:center;gap:1rem;padding:0.85rem 1rem;background:#FFF8EE;border:1.5px solid #D97706;border-radius:10px;cursor:pointer;text-align:left;font-family:'NYUPerstare',sans-serif;transition:border-radius 0.15s"
-            aria-expanded="false"
-            aria-controls="${accordionId}"
-            aria-label="Toggle details for ${sd.label}: ${r.shortTitle}"
-          >
-            <div style="width:28px;height:28px;border-radius:50%;background:#D97706;color:white;display:flex;align-items:center;justify-content:center;font-size:0.85rem;font-weight:700;flex-shrink:0" aria-hidden="true">!</div>
-            <div style="flex:1">
-              <div style="font-size:0.7rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:#92400E;margin-bottom:0.1rem">${sd.label}</div>
-              <div style="font-size:0.9rem;font-weight:500;color:#78350F">${r.shortTitle}</div>
-            </div>
-            <span class="accordion-chevron" aria-hidden="true" style="font-size:0.8rem;color:#92400E">▾</span>
-          </button>
-          <div class="accordion-detail" id="${accordionId}" role="region" aria-label="${sd.label} details">
-            <p style="font-size:0.875rem;line-height:1.65;color:#78350F;margin-bottom:0.85rem">${r.body}</p>
-            <div style="font-size:0.7rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:#92400E;margin-bottom:0.5rem">${r.sectionLabel}</div>
-            <ul style="list-style:none;padding:0;margin:0 0 0.85rem">
-              ${r.items.map(item => `<li style="display:flex;gap:0.5rem;font-size:0.85rem;color:#78350F;padding:0.3rem 0;border-bottom:0.5px solid rgba(0,0,0,0.08);line-height:1.5"><span aria-hidden="true" style="opacity:0.4;flex-shrink:0">—</span>${item}</li>`).join('')}
-            </ul>
-          </div>
-        </div>`;
+      const promptHtml = r.prompt
+        ? '<div class="prompt-block"><div class="prompt-label">Try this in Google Gemini</div>'
+          + '<p class="prompt-text">&ldquo;' + r.prompt.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '&rdquo;</p></div>'
+        : '';
+      const itemsHtml = r.items.map(item =>
+        '<li style="display:flex;gap:0.5rem;font-size:0.85rem;color:#78350F;padding:0.3rem 0;border-bottom:0.5px solid rgba(0,0,0,0.08);line-height:1.5"><span aria-hidden="true" style="opacity:0.4;flex-shrink:0">—</span>' + item + '</li>'
+      ).join('');
+      return '<div style="margin-bottom:0.6rem">'
+        + '<button class="accordion-trigger" onclick="toggleAccordion(\'' + accordionId + '\', this)"'
+        + ' style="width:100%;display:flex;align-items:center;gap:1rem;padding:0.85rem 1rem;background:#FFF8EE;border:1.5px solid #D97706;border-radius:10px;cursor:pointer;text-align:left;font-family:\'NYUPerstare\',sans-serif;transition:border-radius 0.15s"'
+        + ' aria-expanded="false" aria-controls="' + accordionId + '"'
+        + ' aria-label="Toggle details for ' + sd.label + ': ' + r.shortTitle + '">'
+        + '<div style="width:28px;height:28px;border-radius:50%;background:#D97706;color:white;display:flex;align-items:center;justify-content:center;font-size:0.85rem;font-weight:700;flex-shrink:0" aria-hidden="true">!</div>'
+        + '<div style="flex:1">'
+        + '<div style="font-size:0.7rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:#92400E;margin-bottom:0.1rem">' + sd.label + '</div>'
+        + '<div style="font-size:0.9rem;font-weight:500;color:#78350F">' + r.shortTitle + '</div>'
+        + '</div>'
+        + '<span class="accordion-chevron" aria-hidden="true" style="font-size:0.8rem;color:#92400E">▾</span>'
+        + '</button>'
+        + '<div class="accordion-detail" id="' + accordionId + '" role="region" aria-label="' + sd.label + ' details">'
+        + '<p style="font-size:0.875rem;line-height:1.65;color:#78350F;margin-bottom:0.85rem">' + r.body + '</p>'
+        + '<div style="font-size:0.7rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:#92400E;margin-bottom:0.5rem">' + r.sectionLabel + '</div>'
+        + '<ul style="list-style:none;padding:0;margin:0 0 0.85rem">' + itemsHtml + '</ul>'
+        + promptHtml
+        + '</div></div>';
     }
     return '';
   }).join('');
 
+  window._promptMap = promptMap;
+
   tool.innerHTML = `
-    <section aria-label="Your AI readiness roadmap">
       <div style="margin-bottom:1.5rem">
         <div style="font-size:0.72rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--nyu-purple);margin-bottom:0.5rem">Your roadmap</div>
         <h2 style="font-size:1.55rem;font-weight:700;color:var(--ink);margin-bottom:0.5rem;line-height:1.3">${allPass ? 'You\'re AI-ready' : 'Here\'s where to focus'}</h2>
@@ -1555,6 +1781,55 @@ function renderRoadmap() {
 }
 
 // ─── Accordion toggle ────────────────────────────────────────────────────────
+function copyPromptByResultKey(event, btn) {
+  event.stopPropagation();
+  const key = btn.getAttribute('data-result-key');
+  const r = results[key];
+  const prompt = r && r.prompt;
+  if (!prompt) return;
+  navigator.clipboard.writeText(prompt).then(() => {
+    btn.classList.add('copied');
+    btn.textContent = 'Copied';
+    setTimeout(() => { btn.classList.remove('copied'); btn.textContent = 'Copy prompt'; }, 2500);
+  }).catch(() => window.prompt('Copy this prompt:', prompt));
+}
+
+function copyPromptById(event, btn) {
+  event.stopPropagation();
+  const accordionId = btn.getAttribute('data-accordion-id');
+  const prompt = window._promptMap && window._promptMap[accordionId];
+  if (!prompt) return;
+  navigator.clipboard.writeText(prompt).then(() => {
+    btn.classList.add('copied');
+    btn.textContent = 'Copied';
+    setTimeout(() => { btn.classList.remove('copied'); btn.textContent = 'Copy prompt'; }, 2500);
+  }).catch(() => window.prompt('Copy this prompt:', prompt));
+}
+
+function copyPromptByKey(event, btn, key) {
+  event.stopPropagation();
+  const r = results[key];
+  if (!r || !r.prompt) return;
+  navigator.clipboard.writeText(r.prompt).then(() => {
+    btn.classList.add('copied');
+    btn.textContent = 'Copied';
+    setTimeout(() => { btn.classList.remove('copied'); btn.textContent = 'Copy prompt'; }, 2500);
+  }).catch(() => window.prompt('Copy this prompt:', r.prompt));
+}
+
+function copyPrompt(event, btn) {
+  event.stopPropagation(); // prevent accordion from toggling
+  const prompt = btn.getAttribute('data-prompt');
+  navigator.clipboard.writeText(prompt).then(() => {
+    btn.classList.add('copied');
+    btn.textContent = 'Copied';
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      btn.textContent = 'Copy prompt';
+    }, 2500);
+  }).catch(() => prompt && window.prompt('Copy this prompt:', prompt));
+}
+
 function toggleAccordion(id, btn) {
   const panel = document.getElementById(id);
   const isOpen = panel.classList.contains('open');
@@ -1577,14 +1852,38 @@ function toggleHint(btn) {
 }
 
 function copyRoadmap() {
-  const stepLabels = ['Ownership', 'Policy', 'Visibility', 'AI fit'];
-  const lines = stepLabels.map((label, i) => {
+  const stepLabels = ['Ownership', 'Data responsibility', 'Policy', 'Visibility', 'AI fit'];
+  const earlierFlagged = [0,1,2,3].some(i => answers[i] && answers[i].status === 'flag');
+
+  const lines = stepLabels.map((label, i) => { // i maps to answer index
     const ans = answers[i];
     if (!ans) return `${label}: Not answered`;
+    const effectiveStatus = (i === 3 && earlierFlagged) ? 'flag' : ans.status;
     const r = ans.resultKey ? results[ans.resultKey] : null;
-    return `${label}: ${ans.status === 'pass' ? 'Looks good' : r ? r.shortTitle : 'Needs attention'}`;
+
+    if (effectiveStatus === 'pass') {
+      return `${label}: Looks good ✓`;
+    } else if (r) {
+      const actionLines = r.items.map((item, n) => `   ${n + 1}. ${item}`).join('\n');
+      return `${label}: ${r.shortTitle} !\n\n   ${r.body}\n\n   ${r.sectionLabel}:\n${actionLines}`;
+    }
+    return `${label}: Needs attention !`;
   });
-  const text = `NYU AI Readiness Roadmap\n\n${lines.join('\n')}\n\nTool: ${window.location.href.split('?')[0]}`;
+
+  const toolUrl = window.location.href.split('?')[0];
+  const text = [
+    'NYU AI Readiness Roadmap',
+    '─────────────────────────',
+    '',
+    lines.join('\n\n─────────────────────────\n\n'),
+    '',
+    '─────────────────────────',
+    'Not sure where to start? Try describing your challenge to Google Gemini first:',
+    'https://gemini.google.com/app',
+    '',
+    `Tool: ${toolUrl}`
+  ].join('\n');
+
   navigator.clipboard.writeText(text).then(() => {
     const btn = document.getElementById('copy-btn');
     if (btn) { btn.classList.add('copied'); btn.textContent = 'Copied'; setTimeout(() => { btn.classList.remove('copied'); btn.textContent = 'Copy roadmap'; }, 2500); }
