@@ -1342,9 +1342,12 @@ function setProgress(pct, label) {
   // kept for backward compat but now drives step indicator
 }
 
+let userHasInteracted = false;
+
 function focusFirstInteractive() {
   window.scrollTo({ top: 0, behavior: 'instant' });
-  // Only auto-focus on non-touch devices — on mobile it creates a false selected state
+  // Only auto-focus after the user has already made a choice — not on initial load
+  if (!userHasInteracted) return;
   const isTouch = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
   if (!isTouch) {
     setTimeout(() => {
@@ -1409,6 +1412,7 @@ function render() {
 }
 
 function choose(i) {
+  userHasInteracted = true;
   const step = getStep(currentStep);
   const option = step.options[i];
   history.push(currentStep);
