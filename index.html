@@ -1509,13 +1509,15 @@ function shareUrl(key) {
   });
 }
 
-// Load result from URL on page load
+// Load result from URL on page load — clears param immediately so it doesn't persist
 function checkUrlResult() {
   const params = new URLSearchParams(window.location.search);
   const resultKey = params.get('result');
   if (resultKey && results[resultKey]) {
     currentStep = { result: resultKey };
     showRestartBtn(true);
+    // Clear the param from the URL immediately so refreshing doesn't reload the result
+    window.history.replaceState({}, '', window.location.pathname);
   }
 }
 
