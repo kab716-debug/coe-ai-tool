@@ -74,6 +74,7 @@
     padding: 1rem 2rem;
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 1rem;
   }
   .nyu-wordmark {
@@ -191,7 +192,6 @@
     transition: background 0.15s;
   }
   .all-types-btn:hover { background: rgba(255,255,255,0.22); }
-  .all-types-btn::before { content: '↗'; font-size: 0.75rem; aria-hidden: true; }
 
   /* Main */
   main {
@@ -909,6 +909,10 @@
 
 <header role="banner">
   <div class="nyu-wordmark" aria-label="NYU AI Center of Excellence">NYU <span aria-hidden="true">|</span> AI Center of Excellence</div>
+  <div style="display:flex;align-items:center;gap:0.75rem">
+    <span style="font-size:0.65rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;background:rgba(255,255,255,0.2);color:white;padding:0.2rem 0.5rem;border-radius:4px;border:1px solid rgba(255,255,255,0.4)">Beta</span>
+    <a href="https://forms.gle/Lx2d2SURKoUtDAvu8" target="_blank" rel="noopener noreferrer" style="font-size:0.75rem;color:rgba(255,255,255,0.85);text-decoration:underline;text-underline-offset:2px;font-family:'NYUPerstare',sans-serif;">Give feedback</a>
+  </div>
 </header>
 
 <div class="hero" role="region" aria-label="Tool introduction">
@@ -964,7 +968,7 @@
   <div class="modal" id="modal">
     <button class="modal-close" onclick="closeModal()" aria-label="Close dialog">✕</button>
     <h2 id="modal-title">The path to AI-ready</h2>
-    <p class="modal-intro">Before AI can do its best work, four things need to be in place. Most challenges that arrive as AI requests are missing one of the first three. Work through each in order — completing an earlier step often makes the next one easier or unnecessary.</p>
+    <p class="modal-intro">Before AI can do its best work, four things need to be in place. Most institutional challenges that arrive as AI requests are missing one of the first three — and that's not a problem, it's a solvable thing. If you're already experimenting individually or just exploring an idea, keep going. This tool is for when you're ready to bring a solution to your department or institution at scale.</p>
 
     <ol style="list-style:none" aria-label="The four steps to AI-ready">
       <li>
@@ -976,7 +980,7 @@
           <div class="type-row-content rc-1">
             <div class="type-tag">Ownership</div>
             <h3>Name one accountable owner</h3>
-            <p>Identify a single person — not a committee — who has the authority to make decisions and is responsible for outcomes. Without this, solutions stall at implementation regardless of how good they are.</p>
+            <p>Identify a single person — not a committee — who has the authority to make decisions and is responsible for outcomes. Make sure someone is also accountable for how data is handled safely and in compliance with relevant policies. Without clear ownership, solutions stall at implementation regardless of how good they are.</p>
           </div>
         </div>
       </li>
